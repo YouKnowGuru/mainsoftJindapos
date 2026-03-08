@@ -1,0 +1,14 @@
+{
+    "appId": "com.dhisumtseyig.app",
+    "productName": "DhisumTest",
+    "directories": {
+        "output": "release-test"
+    },
+    "files": [
+        "dist/**/*",
+        "dist-electron/**/*"
+    ],
+    "win": {
+        "target": "nsis"
+    }
+}
