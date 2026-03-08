@@ -3,7 +3,7 @@
  * Checks for new application versions from the API server.
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.VITE_API_URL || 'http://localhost:3000';
 
 export interface UpdateInfo {
     available: boolean;

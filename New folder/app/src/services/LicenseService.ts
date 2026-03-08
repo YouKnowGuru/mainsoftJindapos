@@ -42,7 +42,7 @@ export interface ActivationResult {
 
 const TRIAL_DAYS = 7;
 const OFFLINE_GRACE_DAYS = 30;
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.VITE_API_URL || 'http://localhost:3000';
 
 // ============================================
 // License Service Class
