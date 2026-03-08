@@ -422,15 +422,30 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Payment Methods Row */}
-      <section className="py-6 border-b bg-slate-50/50 overflow-hidden">
-        <div className="container px-4 md:px-6">
-          <div className="flex items-center justify-center gap-3 md:gap-8 flex-wrap">
-            <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em]">Payments</span>
-            {paymentMethods.map((method) => (
-              <span key={method} className="text-[10px] md:text-xs font-bold text-slate-500 bg-white px-3 py-1.5 rounded-lg border border-slate-100 shadow-sm">
-                {method}
-              </span>
+      {/* Payment Methods Marquee */}
+      <section className="py-12 border-y bg-slate-50/30 overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-white z-10 pointer-events-none w-20 md:w-40" />
+        <div className="absolute inset-y-0 right-0 bg-gradient-to-l from-white via-transparent to-white z-10 pointer-events-none w-20 md:w-40" />
+
+        <div className="container px-4 md:px-6 mb-8 text-center relative z-20">
+          <Badge className="bg-bhutan-gold/10 text-bhutan-maroon border-none px-3 py-1 rounded-full font-black tracking-widest uppercase text-[8px] mb-2">Transaction Ready</Badge>
+          <h2 className="text-sm md:text-xl font-black text-slate-900 tracking-tight uppercase">Trusted Payment Partners</h2>
+        </div>
+
+        <div className="relative flex overflow-x-hidden">
+          <div className="animate-marquee whitespace-nowrap flex items-center gap-4 md:gap-8 min-w-full py-4">
+            {[...paymentMethods, ...paymentMethods, ...paymentMethods].map((method, idx) => (
+              <div
+                key={`${method}-${idx}`}
+                className="group relative"
+              >
+                <div className="glow-card lighting-glow bg-white px-6 md:px-10 py-3 md:py-5 rounded-2xl border border-slate-100 flex items-center gap-3 md:gap-4 transition-all duration-300">
+                  <div className="h-2 w-2 rounded-full bg-bhutan-gold animate-pulse shadow-[0_0_8px_rgba(255,215,0,0.8)]" />
+                  <span className="text-xs md:text-lg font-black text-slate-800 tracking-tighter uppercase group-hover:text-bhutan-maroon transition-colors">
+                    {method}
+                  </span>
+                </div>
+              </div>
             ))}
           </div>
         </div>
