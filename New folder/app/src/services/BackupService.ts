@@ -10,8 +10,10 @@ import type { ApiResponse } from '../types';
 export class BackupService {
   private dbPath: string;
   private backupDir: string;
+  private dbManager: DatabaseManager;
 
-  constructor(_dbManager: DatabaseManager, userDataPath: string) {
+  constructor(dbManager: DatabaseManager, userDataPath: string) {
+    this.dbManager = dbManager;
     this.dbPath = path.join(userDataPath, 'dhisum_tseyig.db');
     this.backupDir = path.join(userDataPath, 'backups');
 
@@ -64,12 +66,16 @@ export class BackupService {
         fs.copyFileSync(this.dbPath, emergencyBackup);
       }
 
+      // Close the database connection before overwriting the file
+      // SQLite may have locks or WAL files that need to be flushed/closed
+      this.dbManager.close();
+
       // Restore backup
       fs.copyFileSync(backupPath, this.dbPath);
 
       return {
         success: true,
-        message: 'Database restored successfully. Please restart the application.'
+        message: 'Database restored successfully. The application will restart to apply changes.'
       };
     } catch (error: any) {
       return {

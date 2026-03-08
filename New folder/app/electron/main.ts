@@ -2,6 +2,29 @@ import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { pathToFileURL } from 'url';
+
+const isDev = !app.isPackaged || process.env.NODE_ENV === 'development';
+
+// Load environment variables from .env file
+try {
+  const envPath = isDev ? path.join(__dirname, '../../.env') : path.join(process.resourcesPath, '.env');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    envContent.split('\n').forEach(line => {
+      const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+      if (match) {
+        const key = match[1];
+        let value = match[2] || '';
+        if (value.startsWith('"') && value.endsWith('"')) value = value.slice(1, -1);
+        if (value.startsWith("'") && value.endsWith("'")) value = value.slice(1, -1);
+        process.env[key] = value;
+      }
+    });
+    console.log('[Main] Environment variables loaded from:', envPath);
+  }
+} catch (error) {
+  console.error('[Main] Failed to load .env file:', error);
+}
 import { DatabaseManager } from '../src/database/DatabaseManager';
 import { AccountingService } from '../src/services/AccountingService';
 import { InventoryService } from '../src/services/InventoryService';
@@ -35,7 +58,7 @@ let accountingEngineService: AccountingEngineService;
 let licenseService: LicenseService;
 let updateService: UpdateService;
 
-const isDev = !app.isPackaged || process.env.NODE_ENV === 'development';
+
 
 /**
  * Create the main application window
@@ -385,7 +408,15 @@ ipcMain.handle('backup:restore', async () => {
   });
 
   if (!result.canceled && result.filePaths.length > 0) {
-    return backupService.restoreBackup(result.filePaths[0]);
+    const restoreResult = backupService.restoreBackup(result.filePaths[0]);
+    if (restoreResult.success) {
+      // Relaunch the app after a short delay to allow the IPC response to be sent
+      setTimeout(() => {
+        app.relaunch();
+        app.exit(0);
+      }, 1500);
+    }
+    return restoreResult;
   }
   return { success: false, message: 'Restore cancelled' };
 });
