@@ -14,23 +14,20 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
     const type = searchParams.get('type') || 'setup'
 
-    let key: string
+    let downloadUrl: string
     let filename: string
 
     switch (type) {
       case 'portable':
-        key = 'portable.exe'
-        filename = 'DhisumTseyig-Portable.exe'
+        downloadUrl = 'https://github.com/YouKnowGuru/dhisum-pos-download/releases/download/v1.0/Dhisum.Tseyig.1.0.0.exe'
+        filename = 'Dhisum.Tseyig.1.0.0.exe'
         break
       case 'setup':
       default:
-        key = 'setup.exe'
-        filename = 'DhisumTseyig-Setup.exe'
+        downloadUrl = 'https://github.com/YouKnowGuru/dhisum-pos-download/releases/download/v1.0/Dhisum.Tseyig.Setup.1.0.0.exe'
+        filename = 'Dhisum.Tseyig.Setup.1.0.0.exe'
         break
     }
-
-    // Generate presigned URL for download
-    const downloadUrl = await getDownloadUrl(key, 3600) // 1 hour expiry
 
     return NextResponse.json({
       success: true,
@@ -40,16 +37,16 @@ export async function GET(req: NextRequest) {
     })
   } catch (error) {
     console.error('Download URL error:', error)
-    
+
     // Fallback to public URL if presigned URL fails
     try {
       const searchParams = req.nextUrl.searchParams
       const type = searchParams.get('type') || 'setup'
       const key = type === 'portable' ? 'portable.exe' : 'setup.exe'
       const filename = type === 'portable' ? 'DhisumTseyig-Portable.exe' : 'DhisumTseyig-Setup.exe'
-      
+
       const publicUrl = getPublicDownloadUrl(key)
-      
+
       return NextResponse.json({
         success: true,
         downloadUrl: publicUrl,

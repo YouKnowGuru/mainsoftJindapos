@@ -12,8 +12,8 @@ const downloads = [
     title: 'Windows Installer',
     description: 'Recommended for most users. Full installation with all features including POS, accounting, and GST modules.',
     icon: Monitor,
-    filename: 'DhisumTseyig-Setup.exe',
-    size: '~45 MB',
+    filename: 'Dhisum.Tseyig.Setup.1.0.0.exe',
+    size: '~210 MB',
     requirements: [
       'Windows 10 or later',
       '4 GB RAM minimum',
@@ -26,8 +26,8 @@ const downloads = [
     title: 'Portable Version',
     description: 'Run directly from USB drive without installation. Perfect for trying on multiple machines.',
     icon: FileArchive,
-    filename: 'DhisumTseyig-Portable.exe',
-    size: '~50 MB',
+    filename: 'Dhisum.Tseyig.1.0.0.exe',
+    size: '~110 MB',
     requirements: [
       'Windows 10 or later',
       '4 GB RAM minimum',
