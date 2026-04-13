@@ -78,6 +78,9 @@ export async function POST(req: NextRequest) {
 
     // Find valid OTP token
     const otpHash = hashToken(validated.otp)
+    console.log(`[Device Verify] Looking for OTP token for user: ${user.email}`)
+    console.log(`[Device Verify] OTP hash: ${otpHash.substring(0, 16)}...`)
+
     const tokenDoc = await Token.findOne({
       userId: user._id,
       token: otpHash,
@@ -86,6 +89,8 @@ export async function POST(req: NextRequest) {
     })
 
     if (!tokenDoc) {
+      console.log(`[Device Verify] Token not found or expired for ${user.email}`)
+
       // Increment failed attempts
       user.deviceVerificationAttempts = (user.deviceVerificationAttempts || 0) + 1
 
@@ -144,6 +149,8 @@ export async function POST(req: NextRequest) {
     }
 
     // OTP is valid - approve device
+    console.log(`[Device Verify] OTP valid for ${user.email} - approving device`)
+
     const deviceFingerprint = tokenDoc.deviceFingerprint || null
 
     // Add to approved devices list
@@ -224,11 +231,14 @@ export async function POST(req: NextRequest) {
       },
     })
   } catch (error: any) {
-    console.error('Device verification error:', error)
+    console.error('[Device Verify] Error:', error.message)
+    console.error('[Device Verify] Stack:', error.stack)
+    console.error('[Device Verify] Full error:', error)
 
     if (error instanceof z.ZodError) {
+      console.error('[Device Verify] Validation errors:', error.errors)
       return NextResponse.json(
-        { success: false, error: 'Invalid request data' },
+        { success: false, error: 'Invalid request data', details: error.errors },
         { status: 400 }
       )
     }
@@ -253,7 +263,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { success: false, error: 'Verification failed. Please try again.' },
+      { success: false, error: 'Verification failed. Please try again.', errorMessage: error.message },
       { status: 500 }
     )
   }

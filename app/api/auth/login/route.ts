@@ -247,50 +247,42 @@ export async function POST(req: NextRequest) {
       deviceFingerprint = fingerprint
     }
 
-    // 7. Check if this is a new device that requires OTP verification
-    // SECURITY FIX: Require OTP for both:
-    // a) Device fingerprint mismatch (different device)
-    // b) First-time device binding (no stored fingerprint yet)
-    let deviceMismatch = false
+    // 7. Check if this is a device that requires OTP verification
+    // SECURITY: Only require OTP if user has a PRIOR device fingerprint AND it doesn't match
+    // First-time logins, trial users, and new license activators should NOT need OTP
     let requiresOTP = false
 
-    if (deviceFingerprint) {
-      // User provided device info - check if verification needed
-      if (user.deviceFingerprint) {
-        // User has a stored fingerprint - validate it
-        const { validateDeviceFingerprint } = await import('@/lib/auth/device')
-        const deviceValid = await validateDeviceFingerprint(
-          user.deviceFingerprint,
-          deviceFingerprint
-        )
+    if (user.deviceFingerprint && deviceFingerprint) {
+      // User has a stored fingerprint - validate it
+      const { validateDeviceFingerprint } = await import('@/lib/auth/device')
+      const deviceValid = await validateDeviceFingerprint(
+        user.deviceFingerprint,
+        deviceFingerprint
+      )
 
-        if (!deviceValid) {
-          // Device mismatch - require OTP verification
-          deviceMismatch = true
-          requiresOTP = true
-
-          // Log device mismatch event
-          await logDeviceMismatch({
-            userId: user._id.toString(),
-            email: user.email,
-            ipAddress: clientIp,
-            userAgent: req.headers.get('user-agent') || undefined,
-            deviceId: validated.deviceId,
-            deviceFingerprint,
-            details: {
-              reason: 'Device fingerprint mismatch',
-              storedFingerprint: user.deviceFingerprint,
-              currentFingerprint: deviceFingerprint,
-            },
-          })
-        }
-      } else {
-        // No stored fingerprint - this is a first-time device binding
-        // For security, require OTP verification for new devices
+      if (!deviceValid) {
+        // Device mismatch - require OTP verification
         requiresOTP = true
-        console.log(`[AUTH] New device binding detected for ${user.email} - OTP required`)
+
+        // Log device mismatch event
+        await logDeviceMismatch({
+          userId: user._id.toString(),
+          email: user.email,
+          ipAddress: clientIp,
+          userAgent: req.headers.get('user-agent') || undefined,
+          deviceId: validated.deviceId,
+          deviceFingerprint,
+          details: {
+            reason: 'Device fingerprint mismatch',
+            storedFingerprint: user.deviceFingerprint,
+            currentFingerprint: deviceFingerprint,
+          },
+        })
+
+        console.log(`[AUTH] Device mismatch for ${user.email} - OTP required`)
       }
     }
+    // Else: First-time login or no stored fingerprint - allow without OTP
 
     // Generate and send OTP if verification is required
     // FIX: Only check requiresOTP, don't require deviceFingerprint (it might be missing)
