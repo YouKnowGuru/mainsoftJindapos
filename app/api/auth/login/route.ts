@@ -247,118 +247,136 @@ export async function POST(req: NextRequest) {
       deviceFingerprint = fingerprint
     }
 
-    // 7. Check for device mismatch (if device already bound)
-    // SECURITY FIX: Require OTP verification for new devices
+    // 7. Check if this is a new device that requires OTP verification
+    // SECURITY FIX: Require OTP for both:
+    // a) Device fingerprint mismatch (different device)
+    // b) First-time device binding (no stored fingerprint yet)
     let deviceMismatch = false
-    if (user.deviceFingerprint && deviceFingerprint) {
-      const { validateDeviceFingerprint } = await import('@/lib/auth/device')
-      const deviceValid = await validateDeviceFingerprint(
-        user.deviceFingerprint,
-        deviceFingerprint
+    let requiresOTP = false
+
+    if (deviceFingerprint) {
+      // User provided device info - check if verification needed
+      if (user.deviceFingerprint) {
+        // User has a stored fingerprint - validate it
+        const { validateDeviceFingerprint } = await import('@/lib/auth/device')
+        const deviceValid = await validateDeviceFingerprint(
+          user.deviceFingerprint,
+          deviceFingerprint
+        )
+
+        if (!deviceValid) {
+          // Device mismatch - require OTP verification
+          deviceMismatch = true
+          requiresOTP = true
+
+          // Log device mismatch event
+          await logDeviceMismatch({
+            userId: user._id.toString(),
+            email: user.email,
+            ipAddress: clientIp,
+            userAgent: req.headers.get('user-agent') || undefined,
+            deviceId: validated.deviceId,
+            deviceFingerprint,
+            details: {
+              reason: 'Device fingerprint mismatch',
+              storedFingerprint: user.deviceFingerprint,
+              currentFingerprint: deviceFingerprint,
+            },
+          })
+        }
+      } else {
+        // No stored fingerprint - this is a first-time device binding
+        // For security, require OTP verification for new devices
+        requiresOTP = true
+        console.log(`[AUTH] New device binding detected for ${user.email} - OTP required`)
+      }
+    }
+
+    // Generate and send OTP if verification is required
+    if (requiresOTP && deviceFingerprint) {
+
+      // Generate 6-digit OTP
+      const otp = crypto.randomInt(100000, 999999).toString()
+      const otpHash = hashToken(otp)
+
+      // Delete old device verification tokens
+      await Token.deleteMany({
+        userId: user._id,
+        type: 'device-verification',
+      })
+
+      // Save new OTP (5-minute expiry)
+      await Token.create({
+        userId: user._id,
+        token: otpHash,
+        type: 'device-verification',
+        deviceId: validated.deviceId,
+        deviceFingerprint,
+        deviceInfo: validated.deviceInfo,
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+      })
+
+      // Send OTP to user's email
+      let emailSent = true
+      let emailError = null
+      try {
+        await sendDeviceVerificationEmail(
+          user.email,
+          otp,
+          {
+            platform: validated.deviceInfo?.platform,
+            hostname: validated.deviceInfo?.hostname,
+          }
+        )
+        console.log(`[AUTH] Device verification OTP sent to: ${user.email}`)
+      } catch (emailError: any) {
+        emailSent = false
+        emailError = emailError.message
+        console.error('[AUTH] Failed to send device verification email:', emailError)
+        console.error('[AUTH] SMTP Error Details:', emailError)
+        // Log the error but continue - user can still try to login if they check Vercel logs
+      }
+
+      // Log device verification required event
+      await logDeviceVerificationRequired({
+        userId: user._id.toString(),
+        email: user.email,
+        ipAddress: clientIp,
+        userAgent: req.headers.get('user-agent') || undefined,
+        deviceId: validated.deviceId,
+        deviceFingerprint,
+        details: {
+          reason: 'New device detected',
+          storedFingerprint: user.deviceFingerprint,
+          currentFingerprint: deviceFingerprint,
+          otpSent: emailSent,
+          emailError: emailError,
+          otpExpiryMinutes: 5,
+        },
+      })
+
+      console.warn(
+        `[AUTH] Device verification for ${user.email} - OTP ${emailSent ? 'sent' : 'FAILED to send'} to email`
       )
 
-      if (!deviceValid) {
-        // Device mismatch - require OTP verification
-        deviceMismatch = true
-
-        // Log device mismatch event
-        await logDeviceMismatch({
-          userId: user._id.toString(),
-          email: user.email,
-          ipAddress: clientIp,
-          userAgent: req.headers.get('user-agent') || undefined,
-          deviceId: validated.deviceId,
-          deviceFingerprint,
-          details: {
-            reason: 'Device fingerprint mismatch',
-            storedFingerprint: user.deviceFingerprint,
-            currentFingerprint: deviceFingerprint,
-          },
-        })
-
-        // Generate 6-digit OTP
-        const otp = crypto.randomInt(100000, 999999).toString()
-        const otpHash = hashToken(otp)
-
-        // Delete old device verification tokens
-        await Token.deleteMany({
-          userId: user._id,
-          type: 'device-verification',
-        })
-
-        // Save new OTP (5-minute expiry)
-        await Token.create({
-          userId: user._id,
-          token: otpHash,
-          type: 'device-verification',
-          deviceId: validated.deviceId,
-          deviceFingerprint,
-          deviceInfo: validated.deviceInfo,
-          expiresAt: new Date(Date.now() + 5 * 60 * 1000),
-        })
-
-        // Send OTP to user's email
-        let emailSent = true
-        let emailError = null
-        try {
-          await sendDeviceVerificationEmail(
-            user.email,
-            otp,
-            {
-              platform: validated.deviceInfo?.platform,
-              hostname: validated.deviceInfo?.hostname,
-            }
-          )
-          console.log(`[AUTH] Device verification OTP sent to: ${user.email}`)
-        } catch (emailError: any) {
-          emailSent = false
-          emailError = emailError.message
-          console.error('[AUTH] Failed to send device verification email:', emailError)
-          console.error('[AUTH] SMTP Error Details:', emailError)
-          // Log the error but continue - user can still try to login if they check Vercel logs
-        }
-
-        // Log device verification required event
-        await logDeviceVerificationRequired({
-          userId: user._id.toString(),
-          email: user.email,
-          ipAddress: clientIp,
-          userAgent: req.headers.get('user-agent') || undefined,
-          deviceId: validated.deviceId,
-          deviceFingerprint,
-          details: {
-            reason: 'New device detected',
-            storedFingerprint: user.deviceFingerprint,
-            currentFingerprint: deviceFingerprint,
-            otpSent: emailSent,
-            emailError: emailError,
-            otpExpiryMinutes: 5,
-          },
-        })
-
-        console.warn(
-          `[AUTH] Device mismatch for ${user.email} - OTP ${emailSent ? 'sent' : 'FAILED to send'} to email`
-        )
-
-        // Return needsStepUp response
-        const maskedEmail = `${user.email.substring(0, 3)}***@${user.email.split('@')[1]}`
-        return NextResponse.json(
-          {
-            success: false,
-            error: emailSent
-              ? 'New device detected. Please verify with the code sent to your email.'
-              : 'New device detected. However, we could not send the verification email. Please check your email settings or contact support.',
-            needsStepUp: true,
-            stepUpType: 'device_verification',
-            email: maskedEmail,
-            emailSent: emailSent,
-            emailError: emailError,
-            maxAttempts: 3,
-            lockoutMinutes: 15,
-          },
-          { status: 403 }
-        )
-      }
+      // Return needsStepUp response
+      const maskedEmail = `${user.email.substring(0, 3)}***@${user.email.split('@')[1]}`
+      return NextResponse.json(
+        {
+          success: false,
+          error: emailSent
+            ? 'New device detected. Please verify with the code sent to your email.'
+            : 'New device detected. However, we could not send the verification email. Please check your email settings or contact support.',
+          needsStepUp: true,
+          stepUpType: 'device_verification',
+          email: maskedEmail,
+          emailSent: emailSent,
+          emailError: emailError,
+          maxAttempts: 3,
+          lockoutMinutes: 15,
+        },
+        { status: 403 }
+      )
     }
 
     // 8. Create session with token pair (access + refresh tokens)
@@ -371,8 +389,8 @@ export async function POST(req: NextRequest) {
       userAgent
     )
 
-    // Update user's device fingerprint if mismatch detected
-    if (deviceMismatch && deviceFingerprint) {
+    // Update user's device fingerprint if this was a new binding
+    if (requiresOTP && deviceFingerprint) {
       await PosUser.findByIdAndUpdate(user._id, {
         $set: {
           deviceFingerprint: deviceFingerprint,
@@ -389,7 +407,7 @@ export async function POST(req: NextRequest) {
     console.log(`[AUTH] Successful login for ${user.email} from ${clientIp}`)
 
     // Log device bound event if this is a new device binding
-    if (deviceMismatch && deviceFingerprint) {
+    if (requiresOTP && deviceFingerprint) {
       await logDeviceBound({
         userId: user._id.toString(),
         email: user.email,
