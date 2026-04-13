@@ -10,11 +10,18 @@ const resendSchema = z.object({
   email: z.string().email('Invalid email address').toLowerCase().trim(),
 })
 
+/**
+ * Hash token for storage and comparison
+ */
+function hashToken(token: string): string {
+  return crypto.createHash('sha256').update(token).digest('hex')
+}
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body = await req.json()
     console.log('[Resend] Request received for email:', body.email)
-    
+
     const validated = resendSchema.parse(body)
 
     await connectDB()
@@ -46,15 +53,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     // Generate new token
     const verifyToken = crypto.randomBytes(32).toString('hex')
+    const tokenHash = hashToken(verifyToken)  // Hash before storing
+
     await Token.create({
       userId: user._id,
-      token: verifyToken,
+      token: tokenHash,  // Store HASHED token
       type: 'verify',
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
     })
-    console.log('[Resend] New verify token created')
+    console.log('[Resend] New verify token created (hashed)')
 
-    // Send email
+    // Send email with RAW token (user needs the original to click link)
     try {
       await sendVerificationEmail(validated.email, verifyToken, user.username)
       console.log('[Resend] ✅ Verification email sent to:', validated.email)

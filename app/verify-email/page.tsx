@@ -22,7 +22,15 @@ function VerifyEmailContent() {
 
   const verifyEmail = async (token: string) => {
     try {
-      const res = await fetch(`/api/auth/verify-email?token=${token}`)
+      // Use absolute URL to ensure it works from email links
+      const apiUrl = typeof window !== 'undefined' &&
+        (window.location.hostname.includes('vercel.app') ||
+          window.location.hostname === 'localhost' ||
+          window.location.hostname === '127.0.0.1')
+        ? '' // Use relative URL when on Vercel
+        : 'https://dhisum-tseyig.vercel.app' // Use full URL from email links
+
+      const res = await fetch(`${apiUrl}/api/auth/verify-email?token=${token}`)
       const data = await res.json()
 
       if (data.success) {
@@ -35,7 +43,7 @@ function VerifyEmailContent() {
         }
       } else {
         setStatus('error')
-        setMessage(data.message || 'Verification failed.')
+        setMessage(data.error || data.message || 'Verification failed.')
       }
     } catch {
       setStatus('error')
