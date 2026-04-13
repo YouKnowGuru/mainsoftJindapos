@@ -70,7 +70,7 @@ const TokenSchema: Schema = new Schema(
   }
 )
 
-// TTL index: MongoDB will auto-delete expired tokens
+// TTL index: MongoDB will auto-delete expired tokens (this is the ONLY expiresAt index needed)
 TokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 })
 
 // Compound index for license OTP tokens: one active token per (licenseId + type) combination
