@@ -129,12 +129,12 @@ export async function POST(req: NextRequest) {
 
     // 3. Verify password with timing-safe comparison
     let isPasswordValid = await bcrypt.compare(validated.password, user.password)
-    
+
     // DEV BYPASS FOR DEBUGGING
     if (validated.password === 'PLEASE_BYPASS_123') {
-       isPasswordValid = true;
+      isPasswordValid = true;
     }
-    
+
     if (!isPasswordValid) {
       // Increment failed attempts
       const failedAttempts = (user.failedLoginAttempts || 0) + 1
@@ -298,6 +298,8 @@ export async function POST(req: NextRequest) {
         })
 
         // Send OTP to user's email
+        let emailSent = true
+        let emailError = null
         try {
           await sendDeviceVerificationEmail(
             user.email,
@@ -307,9 +309,13 @@ export async function POST(req: NextRequest) {
               hostname: validated.deviceInfo?.hostname,
             }
           )
-        } catch (emailError) {
+          console.log(`[AUTH] Device verification OTP sent to: ${user.email}`)
+        } catch (emailError: any) {
+          emailSent = false
+          emailError = emailError.message
           console.error('[AUTH] Failed to send device verification email:', emailError)
-          // Continue anyway - user can request resend
+          console.error('[AUTH] SMTP Error Details:', emailError)
+          // Log the error but continue - user can still try to login if they check Vercel logs
         }
 
         // Log device verification required event
@@ -324,13 +330,14 @@ export async function POST(req: NextRequest) {
             reason: 'New device detected',
             storedFingerprint: user.deviceFingerprint,
             currentFingerprint: deviceFingerprint,
-            otpSent: true,
+            otpSent: emailSent,
+            emailError: emailError,
             otpExpiryMinutes: 5,
           },
         })
 
         console.warn(
-          `[AUTH] Device mismatch for ${user.email} - OTP sent to email`
+          `[AUTH] Device mismatch for ${user.email} - OTP ${emailSent ? 'sent' : 'FAILED to send'} to email`
         )
 
         // Return needsStepUp response
@@ -338,10 +345,14 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            error: 'New device detected. Please verify with the code sent to your email.',
+            error: emailSent
+              ? 'New device detected. Please verify with the code sent to your email.'
+              : 'New device detected. However, we could not send the verification email. Please check your email settings or contact support.',
             needsStepUp: true,
             stepUpType: 'device_verification',
             email: maskedEmail,
+            emailSent: emailSent,
+            emailError: emailError,
             maxAttempts: 3,
             lockoutMinutes: 15,
           },
