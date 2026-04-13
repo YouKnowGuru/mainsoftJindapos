@@ -293,7 +293,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Generate and send OTP if verification is required
-    if (requiresOTP && deviceFingerprint) {
+    // FIX: Only check requiresOTP, don't require deviceFingerprint (it might be missing)
+    if (requiresOTP) {
 
       // Generate 6-digit OTP
       const otp = crypto.randomInt(100000, 999999).toString()
@@ -324,8 +325,8 @@ export async function POST(req: NextRequest) {
           user.email,
           otp,
           {
-            platform: validated.deviceInfo?.platform,
-            hostname: validated.deviceInfo?.hostname,
+            platform: validated.deviceInfo?.platform || 'Unknown',
+            hostname: validated.deviceInfo?.hostname || 'Unknown Device',
           }
         )
         console.log(`[AUTH] Device verification OTP sent to: ${user.email}`)
