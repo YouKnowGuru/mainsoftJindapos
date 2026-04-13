@@ -1,10 +1,13 @@
 import nodemailer from 'nodemailer'
 
-// Fixed: Properly detect production environment (Vercel)
-// Priority: 1. VERCEL_URL (production), 2. NEXTAUTH_URL (custom), 3. localhost (dev fallback)
-const BASE_URL = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : process.env.NEXTAUTH_URL || 'http://localhost:3000'
+// Fixed: Use stable NEXTAUTH_URL instead of auto-changing VERCEL_URL
+// VERCEL_URL changes with every preview deployment, causing email links to break
+// Priority: 1. NEXTAUTH_URL (stable), 2. VERCEL_URL (production fallback), 3. localhost (dev)
+const BASE_URL = process.env.NEXTAUTH_URL
+  ? process.env.NEXTAUTH_URL
+  : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3000'
 const isDev = process.env.NODE_ENV === 'development'
 
 /**
