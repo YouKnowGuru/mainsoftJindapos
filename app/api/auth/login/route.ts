@@ -382,13 +382,24 @@ export async function POST(req: NextRequest) {
       userAgent
     )
 
-    // Update user's device fingerprint if this was a new binding
-    if (requiresOTP && deviceFingerprint) {
+    // 8. Update device fingerprint on every successful login (not just OTP)
+    // This ensures the device is recognized on subsequent logins
+    if (deviceFingerprint) {
       await PosUser.findByIdAndUpdate(user._id, {
         $set: {
           deviceFingerprint: deviceFingerprint,
           lastLoginAt: new Date(),
           lastLoginIp: clientIp,
+          failedLoginAttempts: 0,
+        },
+      })
+    } else {
+      // Still update login timestamps even without fingerprint
+      await PosUser.findByIdAndUpdate(user._id, {
+        $set: {
+          lastLoginAt: new Date(),
+          lastLoginIp: clientIp,
+          failedLoginAttempts: 0,
         },
       })
     }
@@ -399,28 +410,10 @@ export async function POST(req: NextRequest) {
     // Log successful login
     console.log(`[AUTH] Successful login for ${user.email} from ${clientIp}`)
 
-    // Log device bound event if this is a new device binding
-    if (requiresOTP && deviceFingerprint) {
-      await logDeviceBound({
-        userId: user._id.toString(),
-        email: user.email,
-        ipAddress: clientIp,
-        userAgent: req.headers.get('user-agent') || undefined,
-        deviceId: validated.deviceId || user.deviceId,
-        deviceFingerprint,
-        details: {
-          action: 'device_updated',
-          previousFingerprint: user.deviceFingerprint,
-          newFingerprint: deviceFingerprint,
-        },
-      })
-    }
-
     // Return tokens and user info
     return NextResponse.json({
       success: true,
       message: 'Login successful.',
-      deviceMismatch: deviceMismatch, // Client can show warning if needed
       tokens: {
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
