@@ -3,8 +3,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 export const metadata = {
-    title: 'Privacy Policy - Dhisum Tseyig',
-    description: 'How Dhisum Tseyig handles your data. Your business data stays on your computer.',
+    title: 'Privacy Policy - Jinda',
+    description: 'How Jinda handles your data. Your business data stays on your computer.',
 }
 
 export default function PrivacyPage() {
@@ -81,7 +81,7 @@ export default function PrivacyPage() {
                             <h2 className="text-2xl font-black text-slate-900 tracking-tight">Need More Information?</h2>
                             <div className="space-y-4 text-slate-600 font-medium text-sm leading-relaxed">
                                 <p>
-                                    By using Dhisum Tseyig, you agree to this privacy policy. If we make changes, we will update this page.
+                                    By using Jinda, you agree to this privacy policy. If we make changes, we will update this page.
                                 </p>
                                 <p>
                                     Questions? Email us at <span className="text-bhutan-maroon font-black">dhisumtseyig@gmail.com</span>

@@ -8,7 +8,7 @@ import ScrollToTop from '@/components/ScrollToTop'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Dhisum Tseyig - POS Software for Bhutan',
+  title: 'Jinda - POS Software for Bhutan',
   description: 'Modern POS and accounting software designed for small businesses in Bhutan. Simple, reliable, and built for local needs.',
   keywords: 'POS, accounting, Bhutan, small business, retail, software',
 }

@@ -1,7 +1,7 @@
 {
-  "name": "dhisum-tseyig-platform",
+  "name": "site-jinda",
   "version": "1.0.0",
-  "description": "Dhisum Tseyig POS Software Distribution and Licensing Platform",
+  "description": "Jinda POS Software Distribution and Licensing Platform",
   "private": true,
   "main": "electron/main.js",
   "scripts": {
@@ -71,8 +71,8 @@
     "typescript": "^5.3.3"
   },
   "build": {
-    "appId": "com.dhisum.tseyig",
-    "productName": "Dhisum Tseyig POS",
+    "appId": "com.site.jinda",
+    "productName": "Jinda POS",
     "directories": {
       "output": "dist-electron"
     },
@@ -83,15 +83,27 @@
     ],
     "win": {
       "target": [
-        "nsis"
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
-      "icon": "public/icon.ico"
+      "icon": "public/icon.ico",
+      "sign": null,
+      "signingHashAlgorithms": [],
+      "requestedExecutionLevel": "asInvoker"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "license": "electron/license-agreement.html",
-      "deleteAppDataOnUninstall": true
+      "deleteAppDataOnUninstall": true,
+      "differentialPackage": false
+    },
+    "electronDownload": {
+      "cache": "./.electron-cache"
     }
   }
 }

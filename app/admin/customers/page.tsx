@@ -122,7 +122,7 @@ export default function CustomersPage() {
           <div>
             <h1 className="text-3xl font-black text-slate-900 tracking-tight">Stakeholders Registry</h1>
             <p className="text-sm font-bold text-slate-400">
-              Verified business partners using Dhisum Tseyig
+              Verified business partners using Jinda
             </p>
           </div>
         </div>

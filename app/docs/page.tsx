@@ -149,8 +149,8 @@ const quickLinks = [
 import { InteractiveCard } from '@/components/InteractiveCard'
 
 export const metadata = {
-  title: 'Documentation - Dhisum Tseyig POS Software',
-  description: 'Learn how to use Dhisum Tseyig — POS, inventory, GST, reports, payroll, and more.',
+  title: 'Documentation - Jinda POS Software',
+  description: 'Learn how to use Jinda — POS, inventory, GST, reports, payroll, and more.',
 }
 
 export default function DocsPage() {
@@ -235,7 +235,7 @@ export default function DocsPage() {
                 {
                   step: 1,
                   title: 'Download & Install',
-                  description: 'Download Dhisum Tseyig for Windows. Run the installer and follow the prompts. Takes about 2 minutes.',
+                  description: 'Download Jinda for Windows. Run the installer and follow the prompts. Takes about 2 minutes.',
                   link: { text: 'Go to Download Page', href: '/download' },
                 },
                 {

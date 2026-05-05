@@ -28,7 +28,7 @@ function VerifyEmailContent() {
           window.location.hostname === 'localhost' ||
           window.location.hostname === '127.0.0.1')
         ? '' // Use relative URL when on Vercel
-        : 'https://dhisum-tseyig.vercel.app' // Use full URL from email links
+        : 'https://site-jinda.vercel.app' // Use full URL from email links
 
       const res = await fetch(`${apiUrl}/api/auth/verify-email?token=${token}`)
       const data = await res.json()
@@ -61,7 +61,7 @@ function VerifyEmailContent() {
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-3xl font-black text-white tracking-tighter italic mb-2">
-            DHISUM <span className="text-amber-400">TSEYIG</span>
+            SITE <span className="text-amber-400">JINDA</span>
           </h1>
           <div className="h-0.5 w-12 bg-amber-500/50 mx-auto mb-3 rounded-full" />
           <p className="text-slate-500 text-[10px] font-bold tracking-[0.3em] uppercase">
@@ -94,7 +94,7 @@ function VerifyEmailContent() {
               <p className="text-slate-400 text-sm mb-6">{message}</p>
               <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4">
                 <p className="text-amber-300 text-sm font-bold">
-                  ✨ You can now open the Dhisum Tseyig POS app and log in.
+                  ✨ You can now open the Jinda POS app and log in.
                 </p>
               </div>
             </div>
@@ -136,7 +136,7 @@ function VerifyEmailContent() {
         {/* Footer */}
         <div className="mt-10">
           <p className="text-[10px] text-slate-700 font-black uppercase tracking-[0.4em]">
-            Dhisum Tseyig v1.0.0 — Himalayan Tech
+            Jinda v1.0.0 — Himalayan Tech
           </p>
         </div>
       </div>

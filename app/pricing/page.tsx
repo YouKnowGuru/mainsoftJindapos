@@ -13,7 +13,6 @@ import { cn } from '@/lib/utils'
 const plans = [
   {
     name: 'Free Trial',
-    price: '0',
     period: '7 days',
     description: 'Try everything before you buy.',
     features: [
@@ -29,9 +28,7 @@ const plans = [
   },
   {
     name: 'Starter (1-Year)',
-    price: '9,999',
     period: 'first year',
-    renewal: 'Nu. 6,999/year',
     description: 'For small shops with one operator.',
     features: [
       '1 User Account',
@@ -46,9 +43,7 @@ const plans = [
   },
   {
     name: 'Growth (2-Year)',
-    price: '14,999',
     period: 'first purchase',
-    renewal: 'Nu. 2,999/year',
     description: 'For growing businesses with staff.',
     features: [
       '2 User Accounts',
@@ -64,9 +59,7 @@ const plans = [
   },
   {
     name: 'Enterprise (3-Year)',
-    price: '19,999',
     period: 'first purchase',
-    renewal: 'Nu. 999/year',
     description: 'Maximum value for scaling businesses.',
     features: [
       '5 User Accounts',
@@ -85,7 +78,7 @@ const plans = [
 const faqs = [
   {
     question: 'Does it work without internet?',
-    answer: 'Yes! Dhisum Tseyig runs entirely on your computer. No internet needed for sales, inventory, printing, or reports. Your data is stored locally in a secure SQLite database.',
+    answer: 'Yes! Jinda runs entirely on your computer. No internet needed for sales, inventory, printing, or reports. Your data is stored locally in a secure SQLite database.',
   },
   {
     question: 'Is GST automatically calculated?',
@@ -110,7 +103,7 @@ const faqs = [
 ]
 
 export const metadata = {
-  title: 'Pricing - Dhisum Tseyig POS Software',
+  title: 'Pricing - Jinda POS Software',
   description: 'Simple, transparent pricing. 7-day free trial. All plans include GST compliance and offline functionality.',
 }
 
@@ -155,13 +148,7 @@ export default function PricingPage() {
                     <p className={cn("text-[10px] md:text-xs font-bold opacity-70 leading-relaxed", plan.bestValue ? "text-slate-300" : "text-muted-foreground")}>{plan.description}</p>
                   </div>
                   <div className="mb-5">
-                    <span className={cn("text-xl md:text-2xl font-black tracking-tighter", plan.bestValue ? "text-white" : "text-slate-900")}>Nu {plan.price}</span>
-                    <span className="text-[9px] md:text-[10px] text-slate-400 font-bold ml-1.5 uppercase tracking-widest">{plan.period}</span>
-                    {plan.renewal && (
-                      <p className={cn("text-[10px] font-black mt-1 uppercase tracking-tight", plan.bestValue ? "text-bhutan-gold" : "text-bhutan-maroon")}>
-                        Renewal: {plan.renewal}
-                      </p>
-                    )}
+                    <span className={cn("text-base md:text-lg font-black opacity-60 uppercase tracking-widest", plan.bestValue ? "text-white" : "text-slate-500")}>{plan.period}</span>
                   </div>
                   <ul className="space-y-2 mb-6 flex-1">
                     {plan.features.map((feature) => (

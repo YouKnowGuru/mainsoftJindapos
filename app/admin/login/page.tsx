@@ -61,7 +61,7 @@ export default function AdminLoginPage() {
             <Shield className="h-10 w-10 text-bhutan-gold group-hover:scale-110 transition-transform" />
           </div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-2">Registry Access</h1>
-          <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Dhisum Tseyig Administrative Portal</p>
+          <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Jinda Administrative Portal</p>
         </div>
 
         <Card className="border-none shadow-2xl rounded-[2.5rem] overflow-hidden bg-white/80 backdrop-blur-xl">

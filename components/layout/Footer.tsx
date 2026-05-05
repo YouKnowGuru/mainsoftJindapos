@@ -54,10 +54,10 @@ const footerLinks = {
 }
 
 const socials = [
-  { icon: Facebook, href: 'https://facebook.com/dhisumtseyig', label: 'Facebook', color: 'hover:text-blue-500' },
-  { icon: Twitter, href: 'https://twitter.com/dhisumtseyig', label: 'Twitter', color: 'hover:text-sky-400' },
-  { icon: Instagram, href: 'https://instagram.com/dhisumtseyig', label: 'Instagram', color: 'hover:text-pink-500' },
-  { icon: Github, href: 'https://github.com/dhisumtseyig', label: 'Github', color: 'hover:text-white' },
+  { icon: Facebook, href: 'https://facebook.com/jinda', label: 'Facebook', color: 'hover:text-blue-500' },
+  { icon: Twitter, href: 'https://twitter.com/jinda', label: 'Twitter', color: 'hover:text-sky-400' },
+  { icon: Instagram, href: 'https://instagram.com/jinda', label: 'Instagram', color: 'hover:text-pink-500' },
+  { icon: Github, href: 'https://github.com/jinda', label: 'Github', color: 'hover:text-white' },
 ]
 
 export default function Footer() {
@@ -76,14 +76,14 @@ export default function Footer() {
                 <div className="relative h-16 w-16 flex items-center justify-center rounded-full bg-white shadow-2xl ring-4 ring-white/10 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 ease-out overflow-hidden">
                   <Image
                     src="/images/logo.png"
-                    alt="Dhisum Tseyig Logo"
+                    alt="Jinda Logo"
                     width={64}
                     height={64}
                     className="object-cover rounded-full p-1"
                   />
                 </div>
-                <span className="text-2xl font-black tracking-tighter">
-                  <span className="text-white">Dhisum</span> <span className="text-bhutan-gold">Tseyig</span>
+                <span className="text-2xl font-black tracking-tighter text-bhutan-gold">
+                  Jinda
                 </span>
               </Link>
               <p className="text-sm text-slate-400 max-w-sm leading-relaxed font-medium">
@@ -216,7 +216,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-8 pt-6">
           <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
             <p className="text-[10px] font-bold text-white/30 tracking-widest uppercase">
-              &copy; {new Date().getFullYear()} Dhisum Tseyig. All Rights Reserved.
+              &copy; {new Date().getFullYear()} Jinda. All Rights Reserved.
             </p>
             <p className="text-[11px] font-black text-white/60 tracking-tight">
               Built in the Heart of the Himalayas — <span className="text-bhutan-gold">Tsirang, Bhutan.</span>

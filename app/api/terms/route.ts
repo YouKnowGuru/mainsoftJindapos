@@ -9,7 +9,7 @@ export async function GET() {
     sections: [
       {
         title: 'Using the Software',
-        content: 'By using Dhisum Tseyig, you agree to these terms. If you do not agree, please do not use the software. You can contact us with any questions.',
+        content: 'By using Jinda, you agree to these terms. If you do not agree, please do not use the software. You can contact us with any questions.',
       },
       {
         title: 'Your Account',
@@ -17,7 +17,7 @@ export async function GET() {
       },
       {
         title: 'Service Availability',
-        content: 'Dhisum Tseyig is a desktop application that runs on your computer. Since data is stored locally, service availability depends on your device health. We recommend regular backups.',
+        content: 'Jinda is a desktop application that runs on your computer. Since data is stored locally, service availability depends on your device health. We recommend regular backups.',
       },
       {
         title: 'What You Cannot Do',
@@ -25,7 +25,7 @@ export async function GET() {
       },
       {
         title: 'Limitation of Liability',
-        content: 'Dhisum Tseyig is provided "as is." We do not guarantee the software will be error-free. We are not liable for any damages resulting from your use of the software.',
+        content: 'Jinda is provided "as is." We do not guarantee the software will be error-free. We are not liable for any damages resulting from your use of the software.',
       },
       {
         title: 'Governing Law',

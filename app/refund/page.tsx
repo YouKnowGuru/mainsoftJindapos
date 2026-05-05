@@ -3,8 +3,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 export const metadata = {
-    title: 'Refund Policy - Dhisum Tseyig',
-    description: 'Refund and cancellation policy for Dhisum Tseyig POS software.',
+    title: 'Refund Policy - Jinda',
+    description: 'Refund and cancellation policy for Jinda POS software.',
 }
 
 export default function RefundPage() {

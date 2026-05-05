@@ -93,7 +93,7 @@ const securityStats = [
 ]
 
 export const metadata = {
-  title: 'Security - Dhisum Tseyig POS Software',
+  title: 'Security - Jinda POS Software',
   description: 'Enterprise-grade security for your business data. Encryption, hardware locking, audit trails, and encrypted cloud backups.',
 }
 
@@ -243,7 +243,7 @@ export default function SecurityPage() {
         <div className="container text-center relative z-10">
           <h2 className="text-2xl md:text-4xl font-black mb-4 tracking-tight">Security You Can Trust</h2>
           <p className="text-bhutan-gold font-medium mb-8 max-w-lg mx-auto">
-            Try Dhisum Tseyig free for 7 days. Your data stays on your computer — always.
+            Try Jinda free for 7 days. Your data stays on your computer — always.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link href="/download">

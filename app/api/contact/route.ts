@@ -92,7 +92,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                     </div>
                   </div>
                   <div class="footer">
-                    <p>Dhisum Tseyig • Admin Notification</p>
+                    <p>Jinda • Admin Notification</p>
                   </div>
                 </div>
               </div>

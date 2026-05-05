@@ -26,7 +26,7 @@ export default function AdminSettingsPage() {
 
   const [profileData, setProfileData] = useState({
     username: 'admin',
-    email: 'admin@dhisumtseyig.com',
+    email: 'admin@sitejinda.com',
   })
 
   const [passwordData, setPasswordData] = useState({

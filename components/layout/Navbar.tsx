@@ -35,15 +35,15 @@ export default function Navbar() {
           <div className="relative h-14 w-14 flex items-center justify-center rounded-full bg-white shadow-xl ring-4 ring-bhutan-maroon/10 border-2 border-bhutan-maroon/20 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 ease-out overflow-hidden">
             <Image
               src="/images/logo.png"
-              alt="Dhisum Tseyig Logo"
+              alt="Jinda Logo"
               width={56}
               height={56}
               className="object-cover rounded-full p-1"
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-xl font-black tracking-tighter leading-none">
-              <span className="text-bhutan-maroon">Dhisum</span> Tseyig
+            <span className="text-xl font-black tracking-tighter leading-none text-bhutan-maroon">
+              Jinda
             </span>
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-0.5">Bhutan</span>
           </div>
@@ -95,21 +95,21 @@ export default function Navbar() {
             <SheetContent side="right" className="w-[300px] border-l-0 bg-white/95 backdrop-blur-2xl">
               <SheetHeader className="sr-only">
                 <SheetTitle>Navigation Menu</SheetTitle>
-                <SheetDescription>Access Dhisum Tseyig platform sections</SheetDescription>
+                <SheetDescription>Access Jinda platform sections</SheetDescription>
               </SheetHeader>
               <div className="flex flex-col gap-6">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setIsOpen(false)}>
                   <div className="relative h-12 w-12 flex items-center justify-center rounded-full bg-white shadow-md ring-2 ring-bhutan-maroon/5 overflow-hidden">
                     <Image
                       src="/images/logo.png"
-                      alt="Dhisum Tseyig Logo"
+                      alt="Jinda Logo"
                       width={48}
                       height={48}
                       className="object-cover rounded-full p-0.5"
                     />
                   </div>
-                  <span className="text-lg font-bold">
-                    <span className="text-bhutan-maroon">Dhisum</span> Tseyig
+                  <span className="text-lg font-bold text-bhutan-maroon">
+                    Jinda
                   </span>
                 </Link>
                 <nav className="flex flex-col gap-4">

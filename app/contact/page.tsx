@@ -73,7 +73,7 @@ export default function ContactPage() {
               Contact Us
             </h1>
             <p className="text-base md:text-lg text-white/80 leading-relaxed font-medium">
-              Have questions about Dhisum Tseyig? Need help with setup, licensing, or GST compliance? We're here for you.
+              Have questions about Jinda? Need help with setup, licensing, or GST compliance? We're here for you.
             </p>
           </div>
         </div>

@@ -19,13 +19,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     switch (type) {
       case 'portable':
-        downloadUrl = 'https://github.com/YouKnowGuru/IHM/releases/download/V/Dhisum.Tseyig.1.0.0.exe'
-        filename = 'Dhisum.Tseyig.1.0.0.exe'
+        downloadUrl = 'https://github.com/YouKnowGuru/IHM/releases/download/V/Jinda.1.0.0.exe'
+        filename = 'Jinda.1.0.0.exe'
         break
       case 'setup':
       default:
-        downloadUrl = 'https://github.com/YouKnowGuru/IHM/releases/download/V/Dhisum.Tseyig.Setup.1.0.0.exe'
-        filename = 'Dhisum.Tseyig.Setup.1.0.0.exe'
+        downloadUrl = 'https://github.com/YouKnowGuru/IHM/releases/download/V/Jinda.Setup.1.0.0.exe'
+        filename = 'Jinda.Setup.1.0.0.exe'
         break
     }
 
@@ -43,7 +43,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       const searchParams = req.nextUrl.searchParams
       const type = searchParams.get('type') || 'setup'
       const key = type === 'portable' ? 'portable.exe' : 'setup.exe'
-      const filename = type === 'portable' ? 'DhisumTseyig-Portable.exe' : 'DhisumTseyig-Setup.exe'
+      const filename = type === 'portable' ? 'SiteJinda-Portable.exe' : 'SiteJinda-Setup.exe'
 
       const publicUrl = getPublicDownloadUrl(key)
 

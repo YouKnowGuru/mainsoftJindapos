@@ -25,7 +25,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({
         version: '1.0.0',
         notes: 'Initial release',
-        downloadUrl: 'https://download.dhisumtseyig.com/setup.exe',
+        downloadUrl: 'https://download.sitejinda.com/setup.exe',
         releaseDate: new Date().toISOString(),
       })
     }

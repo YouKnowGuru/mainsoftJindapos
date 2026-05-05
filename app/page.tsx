@@ -82,7 +82,6 @@ const features = [
 const pricingPlans = [
   {
     name: 'Free Trial',
-    price: '0',
     period: '7 days',
     description: 'Try everything free',
     features: [
@@ -96,9 +95,8 @@ const pricingPlans = [
   },
   {
     name: 'Starter (1-Yr)',
-    price: '9,999',
     period: '1st year',
-    description: 'Nu. 6,999 Renew',
+    description: 'Billed annually',
     features: [
       '1 User Account',
       'All POS Features',
@@ -110,9 +108,8 @@ const pricingPlans = [
   },
   {
     name: 'Growth (2-Yr)',
-    price: '14,999',
     period: '1st purchase',
-    description: 'Nu. 2,999 Renew',
+    description: 'Billed biennially',
     features: [
       '2 User Accounts',
       'Purchase Orders',
@@ -125,9 +122,8 @@ const pricingPlans = [
   },
   {
     name: 'Enterprise (3-Yr)',
-    price: '19,999',
     period: '1st purchase',
-    description: 'Nu. 999 Renew',
+    description: 'Billed triennially',
     features: [
       '5 User Accounts',
       'Payroll & Branches',
@@ -227,7 +223,7 @@ export default function HomePage() {
                   <span className="text-bhutan-gold">Bhutanese Businesses</span>
                 </h1>
                 <p className="text-xs sm:text-sm md:text-base text-white/80 max-w-lg leading-relaxed font-medium">
-                  Streamline sales, manage inventory, handle GST compliance, and grow your business with Dhisum Tseyig — built specifically for Bhutan.
+                  Streamline sales, manage inventory, handle GST compliance, and grow your business with Jinda — built specifically for Bhutan.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 w-full sm:w-auto">
@@ -461,7 +457,7 @@ export default function HomePage() {
             <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">Architects of Digital Change</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-stretch">
+          <div className="max-w-3xl mx-auto w-full">
             {/* Founder Card */}
             <div className="group relative overflow-hidden rounded-[3rem] bg-slate-900 shadow-2xl transition-all duration-700 hover:shadow-bhutan-maroon/20 h-[500px] md:h-[650px]">
               <NextImage
@@ -488,37 +484,6 @@ export default function HomePage() {
                       <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Lead Systems Developer</p>
                     </div>
                     <div className="h-12 w-12 rounded-2xl bg-bhutan-maroon flex items-center justify-center text-bhutan-gold text-lg font-black rotate-3 group-hover/quote:rotate-0 transition-transform shadow-lg">KB</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Partner Card */}
-            <div className="group relative overflow-hidden rounded-[3rem] bg-slate-900 shadow-2xl transition-all duration-700 hover:shadow-bhutan-maroon/20 h-[500px] md:h-[650px]">
-              <NextImage
-                src="/images/power by.jpeg"
-                alt="Strategic Partner"
-                fill
-                className="object-cover object-center group-hover:scale-110 transition-transform duration-1000 opacity-90"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
-
-              <div className="absolute top-8 left-8">
-                <div className="bg-bhutan-maroon text-bhutan-gold font-black text-[10px] uppercase tracking-[0.2em] px-4 py-2 rounded-full shadow-lg">Strategic Partner</div>
-              </div>
-
-              <div className="absolute bottom-8 left-8 right-8">
-                <div className="glass-premium p-8 rounded-[2.5rem] border border-white/30 backdrop-blur-xl relative overflow-hidden group/quote shadow-2xl">
-                  <div className="absolute -top-6 -left-2 text-[120px] text-bhutan-maroon/5 font-serif italic pointer-events-none select-none">&ldquo;</div>
-                  <p className="text-sm md:text-lg text-slate-900 font-bold leading-relaxed relative z-10 italic">
-                    &quot;Bringing seamless inventory and POS solutions to every business across Bhutan, from urban hubs to remote villages.&quot;
-                  </p>
-                  <div className="mt-6 md:mt-8 flex items-center justify-between">
-                    <div>
-                      <h4 className="text-lg md:text-xl font-black text-bhutan-maroon tracking-tight">Our Store Tsirang</h4>
-                      <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Digital Transformation Partner</p>
-                    </div>
-                    <div className="h-12 w-12 rounded-2xl bg-bhutan-maroon flex items-center justify-center text-bhutan-gold text-lg font-black -rotate-3 group-hover/quote:rotate-0 transition-transform shadow-lg">OTS</div>
                   </div>
                 </div>
               </div>
@@ -568,14 +533,8 @@ export default function HomePage() {
                   </div>
                   <div className="mb-6 md:mb-8">
                     <div className="flex items-baseline gap-1">
-                      <span className={cn("text-2xl md:text-3xl font-black", plan.bestValue ? "text-white" : "")}>Nu. {plan.price}</span>
-                      <span className="text-[10px] md:text-xs font-black opacity-60">/{plan.period}</span>
+                      <span className={cn("text-base md:text-lg font-black opacity-60 uppercase tracking-widest", plan.bestValue ? "text-white" : "text-slate-500")}>{plan.period}</span>
                     </div>
-                    {plan.description.includes('Renew') && (
-                      <p className={cn("text-[10px] font-black mt-1 uppercase tracking-tight", plan.bestValue ? "text-bhutan-gold" : "text-white/60")}>
-                        {plan.description}
-                      </p>
-                    )}
                   </div>
                   <ul className="space-y-2 md:space-y-3 mb-6 md:mb-8 flex-1">
                     {plan.features.map((feature) => (
@@ -613,7 +572,7 @@ export default function HomePage() {
             Ascend Your <span className="text-bhutan-gold">Business</span>
           </h2>
           <p className="text-xs md:text-sm text-white/60 max-w-lg mx-auto mb-6 md:mb-10 font-medium leading-relaxed">
-            Join the digital revolution in Bhutan. Deploy Dhisum Tseyig today.
+            Join the digital revolution in Bhutan. Deploy Jinda today.
           </p>
           <Link href="/download">
             <Button size="lg" className="h-11 md:h-14 px-8 md:px-10 bg-bhutan-gold text-bhutan-maroon-dark hover:bg-white font-black shadow-xl shadow-bhutan-gold/20 btn-glow rounded-xl text-sm md:text-base">

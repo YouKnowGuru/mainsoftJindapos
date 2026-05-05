@@ -136,7 +136,7 @@ const paymentMethods = [
 ]
 
 export const metadata = {
-  title: 'Features - Dhisum Tseyig POS Software',
+  title: 'Features - Jinda POS Software',
   description: 'Explore all features: POS, inventory, GST, invoicing, reports, customers, suppliers, purchase orders, expenses, payroll, and more.',
 }
 

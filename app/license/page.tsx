@@ -3,8 +3,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 export const metadata = {
-    title: 'License Agreement - Dhisum Tseyig',
-    description: 'End User License Agreement for Dhisum Tseyig POS software.',
+    title: 'License Agreement - Jinda',
+    description: 'End User License Agreement for Jinda POS software.',
 }
 
 export default function LicensePage() {
@@ -12,7 +12,7 @@ export default function LicensePage() {
         {
             icon: Key,
             title: 'What Your License Allows',
-            content: 'You get a personal, non-transferable license to use Dhisum Tseyig on your computer according to your plan. You can use all features during your active license period.',
+            content: 'You get a personal, non-transferable license to use Jinda on your computer according to your plan. You can use all features during your active license period.',
         },
         {
             icon: UserPlus,

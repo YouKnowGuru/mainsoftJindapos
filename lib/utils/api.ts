@@ -23,7 +23,7 @@ export function getApiBaseUrl(): string {
   }
 
   // For desktop/POS app or any other context, use full Vercel URL
-  return 'https://dhisum-tseyig.vercel.app'
+  return 'https://site-jinda.vercel.app'
 }
 
 /**

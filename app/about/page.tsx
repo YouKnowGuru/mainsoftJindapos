@@ -75,12 +75,12 @@ export default function AboutPage() {
 
                 <div className="container relative z-10 px-4 md:px-6">
                     <div className="max-w-3xl space-y-6 stagger-in">
-                        <Badge className="bg-bhutan-maroon text-bhutan-gold border-none px-4 py-1.5 rounded-full font-black tracking-widest uppercase text-[10px]">About Dhisum Tseyig</Badge>
+                        <Badge className="bg-bhutan-maroon text-bhutan-gold border-none px-4 py-1.5 rounded-full font-black tracking-widest uppercase text-[10px]">About Jinda</Badge>
                         <h1 className="text-4xl md:text-7xl font-black tracking-tight leading-none text-glow-maroon">
                             Business Software for <span className="text-bhutan-gold">Bhutan</span>
                         </h1>
                         <p className="text-lg md:text-xl text-white/70 font-medium leading-relaxed max-w-2xl">
-                            We built Dhisum Tseyig because Bhutanese businesses deserved better. World-class POS, inventory, and accounting tools that understand local needs — from GST compliance to mBOB payments.
+                            We built Jinda because Bhutanese businesses deserved better. World-class POS, inventory, and accounting tools that understand local needs — from GST compliance to mBOB payments.
                         </p>
                     </div>
                 </div>
@@ -96,7 +96,7 @@ export default function AboutPage() {
                                 <div className="h-1.5 w-20 bg-bhutan-maroon rounded-full" />
                             </div>
                             <p className="text-slate-600 font-medium leading-relaxed">
-                                Dhisum Tseyig is not just a POS. It's a complete business management system built specifically for Bhutan. Everything from quick sales to full accounting, GST filing, payroll, and audit trails — all in one desktop application.
+                                Jinda is not just a POS. It's a complete business management system built specifically for Bhutan. Everything from quick sales to full accounting, GST filing, payroll, and audit trails — all in one desktop application.
                             </p>
                             <p className="text-slate-600 font-medium leading-relaxed">
                                 No internet needed. No monthly fees. Your data stays on your computer.
@@ -146,7 +146,7 @@ export default function AboutPage() {
                         <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">The People Behind the Software</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-stretch max-w-6xl mx-auto">
+                    <div className="max-w-3xl mx-auto w-full">
                         {/* Founder Card */}
                         <div className="group relative overflow-hidden rounded-[3rem] bg-slate-900 shadow-2xl transition-all duration-700 hover:shadow-bhutan-maroon/20 h-[600px] md:h-[750px]">
                             <NextImage
@@ -166,10 +166,10 @@ export default function AboutPage() {
                                     <div className="absolute -top-6 -left-2 text-[120px] text-white/5 font-serif italic pointer-events-none select-none">&ldquo;</div>
                                     <div className="space-y-4 relative z-10">
                                         <p className="text-sm md:text-base text-slate-900 font-bold leading-relaxed italic">
-                                            &quot;I built Dhisum Tseyig because Bhutanese businesses deserve software that understands them — not forced to adapt foreign tools that don't fit our way of doing business.&quot;
+                                            &quot;I built Jinda because Bhutanese businesses deserve software that understands them — not forced to adapt foreign tools that don't fit our way of doing business.&quot;
                                         </p>
                                         <p className="text-xs text-slate-700 font-medium leading-relaxed">
-                                            Keshab Baral is the lead developer behind Dhisum Tseyig. Based in Tsirang, Bhutan, he designs and builds every feature with local businesses in mind — from GST compliance to mBOB payment tracking.
+                                            Keshab Baral is the lead developer behind Jinda. Based in Tsirang, Bhutan, he designs and builds every feature with local businesses in mind — from GST compliance to mBOB payment tracking.
                                         </p>
                                     </div>
                                     <div className="mt-8 flex items-center justify-between">
@@ -182,37 +182,6 @@ export default function AboutPage() {
                                 </div>
                             </div>
                         </div>
-
-                        {/* Partner Card */}
-                        <div className="group relative overflow-hidden rounded-[3rem] bg-slate-900 shadow-2xl transition-all duration-700 hover:shadow-bhutan-maroon/20 h-[600px] md:h-[750px]">
-                            <NextImage
-                                src="/images/power by.jpeg"
-                                alt="Strategic Partner"
-                                fill
-                                className="object-cover object-center group-hover:scale-110 transition-transform duration-1000 opacity-90"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent opacity-90" />
-
-                            <div className="absolute top-8 left-8">
-                                <div className="bg-bhutan-maroon text-bhutan-gold font-black text-[10px] uppercase tracking-[0.2em] px-4 py-2 rounded-full shadow-lg">Strategic Partner</div>
-                            </div>
-
-                            <div className="absolute bottom-8 left-8 right-8">
-                                <div className="glass-premium p-8 rounded-[2.5rem] border border-white/30 backdrop-blur-xl relative overflow-hidden group/quote shadow-2xl">
-                                    <div className="absolute -top-6 -left-2 text-[120px] text-white/5 font-serif italic pointer-events-none select-none">&ldquo;</div>
-                                    <p className="text-sm md:text-lg text-slate-900 font-bold leading-relaxed relative z-10 italic">
-                                        &quot;Our Store Tsirang helps bring modern business tools to local shops and stores, making technology accessible for everyone in the region.&quot;
-                                    </p>
-                                    <div className="mt-8 flex items-center justify-between">
-                                        <div>
-                                            <h4 className="text-xl font-black text-bhutan-maroon tracking-tight">Our Store Tsirang</h4>
-                                            <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Strategic Partner | Tsirang, Bhutan</p>
-                                        </div>
-                                        <div className="h-12 w-12 rounded-2xl bg-bhutan-maroon flex items-center justify-center text-bhutan-gold text-lg font-black -rotate-3 group-hover/quote:rotate-0 transition-transform shadow-lg">OTS</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -221,7 +190,7 @@ export default function AboutPage() {
             <section className="py-20 bg-bhutan-maroon text-white relative overflow-hidden">
                 <div className="container text-center relative z-10">
                     <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tight">Ready to Modernize Your Business?</h2>
-                    <p className="text-bhutan-gold font-bold mb-10 max-w-xl mx-auto">Try Dhisum Tseyig free for 7 days. No credit card needed.</p>
+                    <p className="text-bhutan-gold font-bold mb-10 max-w-xl mx-auto">Try Jinda free for 7 days. No credit card needed.</p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <Link href="/download">
                             <Button size="lg" className="bg-bhutan-gold text-bhutan-maroon-dark hover:bg-white hover:text-bhutan-maroon font-black h-14 px-8 rounded-2xl shadow-xl transition-all">

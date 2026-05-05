@@ -87,7 +87,7 @@ export async function POST(
     // Attempt to send the email reply using Nodemailer
     try {
       await transporter.sendMail({
-        from: `"Dhisum Tseyig Support" <${process.env.SMTP_USER}>`,
+        from: `"Jinda Support" <${process.env.SMTP_USER}>`,
         to: originalMessage.email,
         subject: `Re: ${sanitizedSubject}`,
         html: `
@@ -121,7 +121,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; background-color: #f
 <div class="container">
 <div class="header">
 <div class="logo">DT</div>
-<h1>Message from Dhisum Tseyig</h1>
+<h1>Message from Jinda</h1>
 </div>
 <div class="content">
 <p class="greeting">Hello ${sanitizedName},</p>
@@ -129,7 +129,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; background-color: #f
 
 <div class="signature">
 <p>Warm regards,</p>
-<strong>Dhisum Tseyig Support Team</strong>
+<strong>Jinda Support Team</strong>
 <p>Damphu, Our Store • Bhutan</p>
 </div>
 
@@ -139,7 +139,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; background-color: #f
 </div>
 </div>
 <div class="footer">
-<p>© 2026 Dhisum Tseyig POS Solutions</p>
+<p>© 2026 Jinda POS Solutions</p>
 </div>
 </div>
 </div>

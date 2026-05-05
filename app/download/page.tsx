@@ -12,7 +12,7 @@ const downloads = [
     title: 'Windows Installer',
     description: 'Recommended. Full installation with all features.',
     icon: Monitor,
-    filename: 'Dhisum.Tseyig.Setup.exe',
+    filename: 'Jinda.Setup.exe',
     size: '~210 MB',
     requirements: [
       'Windows 10 or later',
@@ -26,7 +26,7 @@ const downloads = [
     title: 'Portable Version',
     description: 'Run from USB without installation. Good for trying on multiple machines.',
     icon: FileArchive,
-    filename: 'Dhisum.Tseyig.exe',
+    filename: 'Jinda.exe',
     size: '~110 MB',
     requirements: [
       'Windows 10 or later',
@@ -100,7 +100,7 @@ export default function DownloadPage() {
       <section className="bg-gradient-to-br from-bhutan-maroon-dark to-bhutan-maroon py-10 md:py-14 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[200px] md:w-[400px] h-[200px] md:h-[400px] bg-bhutan-gold opacity-5 blur-[80px] md:blur-[120px] rounded-full" />
         <div className="container text-center relative z-10 px-4 md:px-6">
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black mb-3 tracking-tight leading-tight">Download Dhisum Tseyig</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black mb-3 tracking-tight leading-tight">Download Jinda</h1>
           <p className="text-xs md:text-sm text-white/70 max-w-md mx-auto font-medium leading-relaxed">
             Get the full software free for 7 days. No credit card needed.
           </p>

@@ -91,7 +91,7 @@ export default function AdminDashboardPage() {
         <div className="relative z-10 text-center md:text-left">
           <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 leading-none mb-3">Admin Dashboard</h1>
           <p className="text-xs md:text-sm font-bold text-slate-400">
-            Real-time control center for Dhisum Tseyig Ecosystem
+            Real-time control center for Jinda Ecosystem
           </p>
         </div>
         <div className="flex gap-3 relative z-10 w-full md:w-auto">

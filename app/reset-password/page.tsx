@@ -115,7 +115,7 @@ function ResetPasswordContent() {
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-3xl font-black text-white tracking-tighter italic mb-2">
-            DHISUM <span className="text-amber-400">TSEYIG</span>
+            SITE <span className="text-amber-400">JINDA</span>
           </h1>
           <div className="h-0.5 w-12 bg-amber-500/50 mx-auto mb-3 rounded-full" />
           <p className="text-slate-500 text-[10px] font-bold tracking-[0.3em] uppercase">
@@ -239,7 +239,7 @@ function ResetPasswordContent() {
               <p className="text-slate-400 text-sm mb-6">{message}</p>
               <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4">
                 <p className="text-emerald-300 text-sm font-bold">
-                  ✨ Open the Dhisum Tseyig POS app and log in with your new password.
+                  ✨ Open the Jinda POS app and log in with your new password.
                 </p>
               </div>
             </div>
@@ -264,7 +264,7 @@ function ResetPasswordContent() {
         {/* Footer */}
         <div className="mt-10">
           <p className="text-[10px] text-slate-700 font-black uppercase tracking-[0.4em]">
-            Dhisum Tseyig v1.0.0 — Himalayan Tech
+            Jinda v1.0.0 — Himalayan Tech
           </p>
         </div>
       </div>

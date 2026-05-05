@@ -45,7 +45,7 @@ export default function LicenseActivatePage() {
           <CardTitle className="flex items-center gap-2">
             <Key className="h-5 w-5" /> Activate License
           </CardTitle>
-          <CardDescription>Enter your license key to activate Dhisum Tseyig.</CardDescription>
+          <CardDescription>Enter your license key to activate Jinda.</CardDescription>
         </CardHeader>
         <CardContent>
           {status === 'success' ? (

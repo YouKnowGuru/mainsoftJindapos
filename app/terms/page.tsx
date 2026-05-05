@@ -3,8 +3,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 export const metadata = {
-    title: 'Terms of Service - Dhisum Tseyig',
-    description: 'Terms and conditions for using Dhisum Tseyig POS software.',
+    title: 'Terms of Service - Jinda',
+    description: 'Terms and conditions for using Jinda POS software.',
 }
 
 export default function TermsPage() {
@@ -12,7 +12,7 @@ export default function TermsPage() {
         {
             icon: FileCheck,
             title: 'Using the Software',
-            content: 'By using Dhisum Tseyig, you agree to these terms. If you do not agree, please do not use the software. You can contact us with any questions.',
+            content: 'By using Jinda, you agree to these terms. If you do not agree, please do not use the software. You can contact us with any questions.',
         },
         {
             icon: Users,
@@ -22,7 +22,7 @@ export default function TermsPage() {
         {
             icon: Activity,
             title: 'Service Availability',
-            content: 'Dhisum Tseyig is a desktop application that runs on your computer. Since data is stored locally, service availability depends on your device health. We recommend regular backups.',
+            content: 'Jinda is a desktop application that runs on your computer. Since data is stored locally, service availability depends on your device health. We recommend regular backups.',
         },
         {
             icon: Ban,
@@ -32,7 +32,7 @@ export default function TermsPage() {
         {
             icon: Scale,
             title: 'Limitation of Liability',
-            content: 'Dhisum Tseyig is provided "as is." We do not guarantee the software will be error-free. We are not liable for any damages resulting from your use of the software.',
+            content: 'Jinda is provided "as is." We do not guarantee the software will be error-free. We are not liable for any damages resulting from your use of the software.',
         },
         {
             icon: AlertCircle,
@@ -51,7 +51,7 @@ export default function TermsPage() {
                         <Badge className="bg-bhutan-gold text-bhutan-maroon-dark border-none px-4 py-1.5 rounded-full font-black tracking-widest uppercase text-[10px]">Terms of Use</Badge>
                         <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">Terms of Service</h1>
                         <p className="text-sm md:text-lg text-white/60 font-medium leading-relaxed">
-                            Simple rules for using Dhisum Tseyig. Designed to protect both you and the platform.
+                            Simple rules for using Jinda. Designed to protect both you and the platform.
                         </p>
                     </div>
                 </div>

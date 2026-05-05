@@ -42,14 +42,14 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
               <div className="relative h-12 w-12 flex items-center justify-center rounded-full bg-white shadow-lg ring-2 ring-bhutan-maroon/5 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 ease-out overflow-hidden">
                 <Image
                   src="/images/logo.png"
-                  alt="Dhisum Tseyig Logo"
+                  alt="Jinda Logo"
                   width={48}
                   height={48}
                   className="object-cover rounded-full p-0.5"
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-sm font-black tracking-tight text-slate-800">Dhisum Tseyig</span>
+                <span className="text-sm font-black tracking-tight text-slate-800">Jinda</span>
                 <span className="text-[10px] font-black text-bhutan-maroon uppercase tracking-widest">Admin Desk</span>
               </div>
             </Link>
@@ -58,7 +58,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
             <div className="relative h-12 w-12 flex items-center justify-center rounded-full bg-white mx-auto shadow-lg ring-2 ring-bhutan-maroon/5 hover:scale-110 hover:rotate-12 transition-all duration-500 ease-out overflow-hidden">
               <Image
                 src="/images/logo.png"
-                alt="Dhisum Tseyig Logo"
+                alt="Jinda Logo"
                 width={48}
                 height={48}
                 className="object-cover rounded-full p-0.5"
