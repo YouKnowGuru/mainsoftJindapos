@@ -130,10 +130,7 @@ export async function POST(req: NextRequest) {
     // 3. Verify password with timing-safe comparison
     let isPasswordValid = await bcrypt.compare(validated.password, user.password)
 
-    // DEV BYPASS FOR DEBUGGING
-    if (validated.password === 'PLEASE_BYPASS_123') {
-      isPasswordValid = true;
-    }
+    // SECURITY: No backdoor passwords. All passwords must be verified through bcrypt.
 
     if (!isPasswordValid) {
       // Increment failed attempts
@@ -158,7 +155,7 @@ export async function POST(req: NextRequest) {
         })
 
         // Log security event
-        console.warn(`[SECURITY] Account locked for user ${user.email} due to ${failedAttempts} failed attempts`)
+        // Account lockout logged via audit system
 
         return NextResponse.json(
           {
@@ -279,7 +276,7 @@ export async function POST(req: NextRequest) {
           },
         })
 
-        console.log(`[AUTH] Device mismatch for ${user.email} - OTP required`)
+        // Device mismatch detected (audit logged)
       }
     }
     // Else: First-time login or no stored fingerprint - allow without OTP
@@ -321,13 +318,11 @@ export async function POST(req: NextRequest) {
             hostname: validated.deviceInfo?.hostname || 'Unknown Device',
           }
         )
-        console.log(`[AUTH] Device verification OTP sent to: ${user.email}`)
       } catch (emailError: any) {
         emailSent = false
         emailError = emailError.message
-        console.error('[AUTH] Failed to send device verification email:', emailError)
-        console.error('[AUTH] SMTP Error Details:', emailError)
-        // Log the error but continue - user can still try to login if they check Vercel logs
+        // Log minimal error info without sensitive details
+        console.error('[AUTH] Failed to send device verification email')
       }
 
       // Log device verification required event
@@ -348,9 +343,7 @@ export async function POST(req: NextRequest) {
         },
       })
 
-      console.warn(
-        `[AUTH] Device verification for ${user.email} - OTP ${emailSent ? 'sent' : 'FAILED to send'} to email`
-      )
+      // Device verification event logged via audit system, not console
 
       // Return needsStepUp response
       const maskedEmail = `${user.email.substring(0, 3)}***@${user.email.split('@')[1]}`
@@ -407,8 +400,7 @@ export async function POST(req: NextRequest) {
     // Clear rate limit on successful login
     loginAttempts.delete(rateLimitKey)
 
-    // Log successful login
-    console.log(`[AUTH] Successful login for ${user.email} from ${clientIp}`)
+    // Successful login is logged via audit system
 
     // Return tokens and user info
     return NextResponse.json({
@@ -441,7 +433,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { success: false, error: 'Login failed. Please try again.', errorMessage: error?.message, stack: error?.stack },
+      { success: false, error: 'Login failed. Please try again.' },
       { status: 500 }
     )
   }

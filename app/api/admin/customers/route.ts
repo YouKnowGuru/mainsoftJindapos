@@ -12,10 +12,11 @@ import { ZodError } from 'zod'
 // GET /api/admin/customers - Get all customers
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    // Check authentication
+    // Check authentication and admin role
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     // Apply rate limiting
@@ -36,10 +37,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const query: any = {}
 
     if (search) {
+      const sanitizedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-        { company: { $regex: search, $options: 'i' } },
+        { name: { $regex: sanitizedSearch, $options: 'i' } },
+        { email: { $regex: sanitizedSearch, $options: 'i' } },
+        { company: { $regex: sanitizedSearch, $options: 'i' } },
       ]
     }
 
@@ -86,10 +88,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 // POST /api/admin/customers - Create new customer
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    // Check authentication
+    // Check authentication and admin role
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     // Apply rate limiting

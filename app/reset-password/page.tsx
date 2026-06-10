@@ -34,7 +34,12 @@ function ResetPasswordContent() {
 
   const validateToken = async (token: string) => {
     try {
-      const res = await fetch(`/api/auth/reset-password?token=${token}`)
+      // SECURITY: Send token in POST body instead of query string to prevent log leakage
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      })
       const data = await res.json()
 
       if (data.success) {

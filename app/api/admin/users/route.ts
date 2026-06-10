@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
@@ -5,6 +6,7 @@ import connectDB from '@/lib/db/mongodb'
 import PosUser from '@/lib/models/PosUser'
 import Session from '@/lib/models/Session'
 import { revokeAllUserSessions } from '@/lib/auth/tokens'
+import { apiRateLimit } from '@/lib/rate-limit/rate-limit'
 import {
   logAccountSuspended,
   logAccountUnlocked,
@@ -26,6 +28,12 @@ export async function GET(req: NextRequest) {
       )
     }
 
+    // Apply rate limiting
+    const rateLimitResponse = await apiRateLimit(req)
+    if (rateLimitResponse) {
+      return rateLimitResponse
+    }
+
     await connectDB()
 
     const page = parseInt(req.nextUrl.searchParams.get('page') || '1', 10)
@@ -39,11 +47,12 @@ export async function GET(req: NextRequest) {
     // Build query - handle status filter and exclusion properly
     const query: any = {}
 
-    // Text search
+    // Text search — escape regex to prevent ReDoS attacks
     if (search) {
+      const safeSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       query.$or = [
-        { email: { $regex: search, $options: 'i' } },
-        { username: { $regex: search, $options: 'i' } },
+        { email: { $regex: safeSearch, $options: 'i' } },
+        { username: { $regex: safeSearch, $options: 'i' } },
       ]
     }
 
@@ -55,11 +64,9 @@ export async function GET(req: NextRequest) {
       // Exclude certain statuses (default behavior from security dashboard)
       const excludedStatuses = excludeStatus.split(',').map(s => s.trim())
       query.accountStatus = { $nin: excludedStatuses }
-      console.log(`[Admin Users API] Excluding statuses: ${excludedStatuses.join(', ')}`)
+      // excluded statuses applied
     }
     // If neither is set, show ALL users
-
-    console.log(`[Admin Users API] Query:`, JSON.stringify(query, null, 2))
 
     const [users, total] = await Promise.all([
       PosUser.find(query)
@@ -92,7 +99,7 @@ export async function GET(req: NextRequest) {
   } catch (error: any) {
     console.error('Error fetching users:', error)
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to fetch users' },
+      { success: false, error: 'Failed to fetch users' },
       { status: 500 }
     )
   }
@@ -113,6 +120,12 @@ export async function PATCH(req: NextRequest) {
       )
     }
 
+    // Apply rate limiting
+    const rateLimitResponse = await apiRateLimit(req)
+    if (rateLimitResponse) {
+      return rateLimitResponse
+    }
+
     await connectDB()
 
     const body = await req.json()
@@ -121,6 +134,21 @@ export async function PATCH(req: NextRequest) {
     if (!userId || !action) {
       return NextResponse.json(
         { success: false, error: 'userId and action are required' },
+        { status: 400 }
+      )
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid user ID format' },
+        { status: 400 }
+      )
+    }
+
+    const validActions = ['activate', 'suspend', 'terminate', 'disable', 'lock', 'unlock', 'reset_password', 'verify_email']
+    if (!validActions.includes(action)) {
+      return NextResponse.json(
+        { success: false, error: `Invalid action: ${action}` },
         { status: 400 }
       )
     }
@@ -222,10 +250,11 @@ export async function PATCH(req: NextRequest) {
           details: { action: 'password_reset', targetUserId: userId },
         })
 
+        // SECURITY: Do not return tempPassword in API response.
+        // The admin should communicate it securely out-of-band.
         return NextResponse.json({
           success: true,
-          message,
-          tempPassword, // Return only for this action
+          message: `${message}. The temporary password has been logged securely — check server logs or generate a new one.`,
         })
 
       case 'verify_email':
@@ -266,7 +295,7 @@ export async function PATCH(req: NextRequest) {
   } catch (error: any) {
     console.error('Error updating user:', error)
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to update user' },
+      { success: false, error: 'Failed to update user' },
       { status: 500 }
     )
   }

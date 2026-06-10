@@ -30,7 +30,12 @@ function VerifyEmailContent() {
         ? '' // Use relative URL when on Vercel
         : 'https://site-jinda.vercel.app' // Use full URL from email links
 
-      const res = await fetch(`${apiUrl}/api/auth/verify-email?token=${token}`)
+      // SECURITY: Send token in POST body instead of query string to prevent log leakage
+      const res = await fetch(`${apiUrl}/api/auth/verify-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      })
       const data = await res.json()
 
       if (data.success) {

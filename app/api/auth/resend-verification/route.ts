@@ -20,7 +20,6 @@ function hashToken(token: string): string {
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body = await req.json()
-    console.log('[Resend] Request received for email:', body.email)
 
     const validated = resendSchema.parse(body)
 
@@ -29,15 +28,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // Find user
     const user = await PosUser.findOne({ email: validated.email })
     if (!user) {
-      console.log('[Resend] No user found for email:', validated.email)
       // Don't reveal email doesn't exist
       return NextResponse.json({
         success: true,
         message: 'If an account exists, a new verification email has been sent.',
       })
     }
-
-    console.log('[Resend] User found:', user.username, '| isVerified:', user.isVerified)
 
     if (user.isVerified) {
       return NextResponse.json({
@@ -49,7 +45,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     // Delete existing verify tokens
     await Token.deleteMany({ userId: user._id, type: 'verify' })
-    console.log('[Resend] Old tokens cleared for user:', user._id)
 
     // Generate new token
     const verifyToken = crypto.randomBytes(32).toString('hex')
@@ -61,15 +56,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       type: 'verify',
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
     })
-    console.log('[Resend] New verify token created (hashed)')
 
     // Send email with RAW token (user needs the original to click link)
     try {
       await sendVerificationEmail(validated.email, verifyToken, user.username)
-      console.log('[Resend] ✅ Verification email sent to:', validated.email)
     } catch (emailError: any) {
-      console.error('[Resend] ❌ SMTP failed for:', validated.email, '-', emailError.message)
-      console.error('[Resend] Full SMTP error:', emailError)
+      console.error('[Resend] SMTP failed')
       return NextResponse.json(
         { success: false, message: 'Failed to send email. Check SMTP configuration.' },
         { status: 500 }

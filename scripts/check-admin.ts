@@ -1,10 +1,9 @@
 import bcrypt from 'bcryptjs'
-import mongoose from 'mongoose'
 import fs from 'fs'
 import path from 'path'
-import Admin from '../lib/models/Admin'
+import dns from 'dns'
 
-// Manual .env loader
+// Load .env BEFORE any other imports that depend on env vars
 const envPath = path.resolve(process.cwd(), '.env')
 if (fs.existsSync(envPath)) {
     const envContent = fs.readFileSync(envPath, 'utf8')
@@ -16,16 +15,19 @@ if (fs.existsSync(envPath)) {
     })
 }
 
+// Apply Google DNS workaround if enabled (must be after .env load)
+if (process.env.MONGODB_USE_GOOGLE_DNS === 'true') {
+    dns.setServers(['8.8.8.8', '8.8.4.4'])
+    console.log('Using Google DNS for MongoDB resolution')
+}
+
+// Now import modules that depend on env vars
+import connectDB from '../lib/db/mongodb'
+import Admin from '../lib/models/Admin'
+
 async function checkAdmin() {
-    const MONGODB_URI = process.env.MONGODB_URI
-
-    if (!MONGODB_URI) {
-        console.error('Please define the MONGODB_URI environment variable')
-        process.exit(1)
-    }
-
     try {
-        await mongoose.connect(MONGODB_URI)
+        await connectDB()
         console.log('Connected to MongoDB')
 
         const admins = await Admin.find({})

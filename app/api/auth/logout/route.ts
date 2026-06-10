@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         currentSessionId || undefined
       )
 
-      console.log(`[AUTH] User ${userId} revoked all sessions (${revokedCount} sessions terminated)`)
+      // Session revocation logged via audit system
 
       return NextResponse.json({
         success: true,
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
           $pull: { activeSessions: sessionIdToRevoke },
         })
 
-        console.log(`[AUTH] Session ${sessionIdToRevoke} revoked for user ${userId}`)
+        // Session revocation logged via audit system
       }
 
       return NextResponse.json({

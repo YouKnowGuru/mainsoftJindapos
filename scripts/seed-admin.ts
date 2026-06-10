@@ -1,10 +1,9 @@
 import bcrypt from 'bcryptjs'
-import mongoose from 'mongoose'
 import fs from 'fs'
 import path from 'path'
-import Admin from '../lib/models/Admin'
+import dns from 'dns'
 
-// Manual .env loader
+// Load .env BEFORE any other imports that depend on env vars
 const envPath = path.resolve(process.cwd(), '.env')
 if (fs.existsSync(envPath)) {
   const envContent = fs.readFileSync(envPath, 'utf8')
@@ -15,12 +14,21 @@ if (fs.existsSync(envPath)) {
     const [key, ...valueParts] = trimmedLine.split('=')
     if (key && valueParts.length > 0) {
       let value = valueParts.join('=').trim()
-      // Remove surrounding quotes if they exist
       value = value.replace(/^(['"])(.*)\1$/, '$2')
       process.env[key.trim()] = value
     }
   })
 }
+
+// Apply Google DNS workaround if enabled (must be after .env load)
+if (process.env.MONGODB_USE_GOOGLE_DNS === 'true') {
+  dns.setServers(['8.8.8.8', '8.8.4.4'])
+  console.log('Using Google DNS for MongoDB resolution')
+}
+
+// Now import modules that depend on env vars
+import mongoose from 'mongoose'
+import Admin from '../lib/models/Admin'
 
 async function seedAdmin() {
   const MONGODB_URI = process.env.MONGODB_URI
@@ -31,16 +39,16 @@ async function seedAdmin() {
   }
 
   try {
-    await mongoose.connect(MONGODB_URI)
+    await mongoose.connect(MONGODB_URI, {
+      family: 4,
+      serverSelectionTimeoutMS: 5000,
+    })
     console.log('Connected to MongoDB')
 
     const username = process.env.ADMIN_USERNAME || 'admin'
     const password = process.env.ADMIN_PASSWORD || 'admin123'
 
-    // Check if admin already exists
     const existingAdmin = await Admin.findOne({ username })
-
-    // Hash password
     const passwordHash = await bcrypt.hash(password, 12)
 
     if (existingAdmin) {
@@ -49,10 +57,10 @@ async function seedAdmin() {
       await existingAdmin.save()
       console.log('Admin password updated successfully.')
     } else {
-      // Create admin
       await Admin.create({
         username,
         passwordHash,
+        role: 'admin',
       })
       console.log('Admin user created successfully.')
     }

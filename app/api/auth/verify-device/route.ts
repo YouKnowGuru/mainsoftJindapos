@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
 
     // Find valid OTP token
     const otpHash = hashToken(validated.otp)
-    console.log(`[Device Verify] Looking for OTP token for user: ${user.email}`)
+    // Device verification lookup (audit logged)
     console.log(`[Device Verify] OTP hash: ${otpHash.substring(0, 16)}...`)
 
     const tokenDoc = await Token.findOne({
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
     })
 
     if (!tokenDoc) {
-      console.log(`[Device Verify] Token not found or expired for ${user.email}`)
+      // Device verification token not found (audit logged)
 
       // Increment failed attempts
       user.deviceVerificationAttempts = (user.deviceVerificationAttempts || 0) + 1
@@ -149,7 +149,7 @@ export async function POST(req: NextRequest) {
     }
 
     // OTP is valid - approve device
-    console.log(`[Device Verify] OTP valid for ${user.email} - approving device`)
+    // Device OTP valid (audit logged)
 
     const deviceFingerprint = tokenDoc.deviceFingerprint || null
 
@@ -208,7 +208,7 @@ export async function POST(req: NextRequest) {
       userAgent
     )
 
-    console.log(`[AUTH] Device verified and approved for ${user.email} from ${clientIp}`)
+    // Device verified (audit logged)
 
     return NextResponse.json({
       success: true,
@@ -231,19 +231,17 @@ export async function POST(req: NextRequest) {
       },
     })
   } catch (error: any) {
+    // SECURITY: Never log stack traces or detailed error messages in production
     console.error('[Device Verify] Error:', error.message)
-    console.error('[Device Verify] Stack:', error.stack)
-    console.error('[Device Verify] Full error:', error)
 
     if (error instanceof z.ZodError) {
-      console.error('[Device Verify] Validation errors:', error.errors)
       return NextResponse.json(
-        { success: false, error: 'Invalid request data', details: error.errors },
+        { success: false, error: 'Invalid request data' },
         { status: 400 }
       )
     }
 
-    // Log suspicious activity on error
+    // Log suspicious activity on error (without stack traces)
     try {
       const body = await req.json().catch(() => null)
       if (body?.email) {
@@ -252,10 +250,7 @@ export async function POST(req: NextRequest) {
           ipAddress: clientIp,
           deviceId: body.deviceId,
           activity: 'device_verification_error',
-          details: {
-            error: error.message,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
-          },
+          details: { error: 'Internal verification error' },
         })
       }
     } catch {
@@ -263,7 +258,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { success: false, error: 'Verification failed. Please try again.', errorMessage: error.message },
+      { success: false, error: 'Verification failed. Please try again.' },
       { status: 500 }
     )
   }

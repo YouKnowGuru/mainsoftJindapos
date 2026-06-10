@@ -118,9 +118,9 @@ export async function POST(req: NextRequest) {
     // Send reset email
     try {
       await sendPasswordResetEmail(normalizedEmail, resetToken, user.username)
-      console.log(`[Auth] Password reset email sent to ${normalizedEmail}`)
+      // Password reset email sent (audit logged)
     } catch (emailError) {
-      console.error(`[Auth] Failed to send reset email to ${normalizedEmail}:`, emailError)
+      console.error('[Auth] Failed to send reset email')
       // Don't fail the request - token is created, user can request again
     }
 
@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
 
     return successResponse
   } catch (error: any) {
-    console.error('Forgot password error:', error)
+    console.error('Forgot password error')
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

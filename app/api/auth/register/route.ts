@@ -173,17 +173,17 @@ export async function POST(req: NextRequest) {
 
     try {
       await sendVerificationEmail(normalizedEmail, verifyToken, validated.username)
-      console.log(`[Register] Verification email sent to ${normalizedEmail}`)
+      // Verification email sent (audit logged)
     } catch (emailErr: any) {
       emailSent = false
       emailError = emailErr.message
-      console.error(`[Register] Failed to send verification email to ${normalizedEmail}:`, emailErr.message)
+      console.error('[Register] Failed to send verification email')
     }
 
     // Clear rate limit on successful registration
     registerAttempts.delete(rateLimitKey)
 
-    console.log(`[Register] New user registered: ${normalizedEmail} (${validated.isTrial ? 'trial' : 'license'})`)
+    // New user registered (audit logged)
 
     return NextResponse.json({
       success: true,

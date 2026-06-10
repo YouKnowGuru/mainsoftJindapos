@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 export interface IAdmin extends Document {
   username: string
   passwordHash: string
+  role: string
   createdAt: Date
   updatedAt: Date
   comparePassword(password: string): Promise<boolean>
@@ -20,6 +21,11 @@ const AdminSchema: Schema = new Schema(
     passwordHash: {
       type: String,
       required: true,
+    },
+    role: {
+      type: String,
+      default: 'admin',
+      enum: ['admin', 'user'],
     },
   },
   {

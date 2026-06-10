@@ -6,6 +6,20 @@ import connectDB from '@/lib/db/mongodb'
 import { ContactMessage } from '@/lib/models/contact-message'
 import nodemailer from 'nodemailer'
 
+/**
+ * Escape HTML to prevent XSS in email content
+ */
+function escapeHtml(text: string): string {
+  const htmlEntities: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+  }
+  return text.replace(/[&<>"']/g, (char) => htmlEntities[char] || char)
+}
+
 // Configure Nodemailer transporter
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
@@ -16,7 +30,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.SMTP_PASS,
   },
   tls: {
-    rejectUnauthorized: false
+    rejectUnauthorized: true
   }
 })
 
@@ -82,13 +96,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                   <div class="content">
                     <div class="user-info">
                       <div>
-                        <p><strong>From:</strong> ${validatedData.name}</p>
-                        <p><strong>Email:</strong> ${validatedData.email}</p>
-                        <p><strong>Subject:</strong> ${validatedData.subject}</p>
+                        <p><strong>From:</strong> ${escapeHtml(validatedData.name)}</p>
+                        <p><strong>Email:</strong> ${escapeHtml(validatedData.email)}</p>
+                        <p><strong>Subject:</strong> ${escapeHtml(validatedData.subject)}</p>
                       </div>
                     </div>
                     <div class="message-box">
-                      <p>"${validatedData.message}"</p>
+                      <p>"${escapeHtml(validatedData.message)}"</p>
                     </div>
                   </div>
                   <div class="footer">

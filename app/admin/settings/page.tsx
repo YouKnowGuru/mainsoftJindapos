@@ -56,12 +56,28 @@ export default function AdminSettingsPage() {
       return
     }
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    try {
+      const res = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          currentPassword: passwordData.currentPassword,
+          newPassword: passwordData.newPassword,
+        }),
+      })
+      const data = await res.json()
 
-    setMessage({ type: 'success', text: 'Password changed successfully' })
-    setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' })
-    setIsSaving(false)
+      if (data.success) {
+        setMessage({ type: 'success', text: 'Password changed successfully' })
+        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' })
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Failed to change password' })
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Network error. Please try again.' })
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (

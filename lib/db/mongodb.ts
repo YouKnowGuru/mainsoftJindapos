@@ -1,11 +1,6 @@
 import mongoose from 'mongoose'
 import dns from 'dns'
 
-// Force Google DNS for MongoDB Atlas resolution (bypasses ISP DNS issues)
-dns.setServers(['8.8.8.8', '8.8.4.4'])
-
-// MONGODB_URI is checked inside connectDB to avoid build-time errors when env vars are missing
-
 interface Cached {
   conn: typeof mongoose | null
   promise: Promise<typeof mongoose> | null
@@ -30,6 +25,11 @@ async function connectDB(): Promise<typeof mongoose> {
 
   if (!MONGODB_URI) {
     throw new Error('Please define the MONGODB_URI environment variable')
+  }
+
+  // Apply Google DNS workaround at runtime (after env vars are loaded)
+  if (process.env.MONGODB_USE_GOOGLE_DNS === 'true') {
+    dns.setServers(['8.8.8.8', '8.8.4.4'])
   }
 
   if (!cached.promise) {

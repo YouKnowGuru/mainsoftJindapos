@@ -6,6 +6,7 @@ import AuditLog from '@/lib/models/AuditLog'
 import PosUser from '@/lib/models/PosUser'
 import Session from '@/lib/models/Session'
 import { Types } from 'mongoose'
+import { apiRateLimit } from '@/lib/rate-limit/rate-limit'
 import {
   getSecurityAlerts,
   getLoginStats,
@@ -28,10 +29,17 @@ export async function GET(req: NextRequest) {
       )
     }
 
+    // Apply rate limiting
+    const rateLimitResponse = await apiRateLimit(req)
+    if (rateLimitResponse) {
+      return rateLimitResponse
+    }
+
     await connectDB()
 
     // Get time range from query params
-    const hours = parseInt(req.nextUrl.searchParams.get('hours') || '24', 10)
+    const hoursParam = req.nextUrl.searchParams.get('hours') || '24'
+    const hours = Math.min(Math.max(parseInt(hoursParam, 10) || 24, 1), 168)
 
     // Gather security metrics
     const [

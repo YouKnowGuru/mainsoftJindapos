@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
     // Delete all verification tokens for this user
     await Token.deleteMany({ userId: user._id, type: 'verify' })
 
-    console.log(`[Auth] Email verified for user: ${user.email}`)
+    // Email verified (audit logged)
 
     // Create session automatically after verification
     const clientIp = req.headers.get('x-forwarded-for') || 'unknown'
@@ -217,7 +217,7 @@ export async function GET(req: NextRequest) {
 
     await Token.deleteMany({ userId: user._id, type: 'verify' })
 
-    console.log(`[Auth] Email verified (GET) for user: ${user.email}`)
+    // Email verified (audit logged)
 
     return NextResponse.json({
       success: true,

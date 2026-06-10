@@ -1,8 +1,10 @@
+import mongoose from 'mongoose'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import connectDB from '@/lib/db/mongodb'
 import { ContactMessage } from '@/lib/models/contact-message'
 import { authOptions } from '@/lib/auth/auth.config'
+import { apiRateLimit } from '@/lib/rate-limit/rate-limit'
 import nodemailer from 'nodemailer'
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -41,13 +43,28 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
-    // Check authentication
+    // Check authentication and admin role
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
+    // Apply rate limiting
+    const rateLimitResponse = await apiRateLimit(req)
+    if (rateLimitResponse) {
+      return rateLimitResponse
     }
 
     const { id } = await params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid message ID format' },
+        { status: 400 }
+      )
+    }
+
     const body = await req.json()
     const { replyText } = body
 

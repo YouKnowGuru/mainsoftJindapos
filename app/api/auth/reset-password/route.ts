@@ -169,7 +169,7 @@ export async function POST(req: NextRequest) {
     // Clear rate limit on success
     resetAttempts.delete(rateLimitKey)
 
-    console.log(`[Auth] Password reset completed for ${user.email}`)
+    // Password reset success logged via audit system
 
     return NextResponse.json({
       success: true,

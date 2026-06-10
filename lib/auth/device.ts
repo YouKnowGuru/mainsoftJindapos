@@ -199,8 +199,11 @@ export function generateLicenseDeviceBinding(
     .update(bindingData)
     .digest('hex')
 
-  // Sign with server secret
-  const secret = process.env.LICENSE_BINDING_SECRET || process.env.NEXTAUTH_SECRET || 'default-secret'
+  // Sign with server secret — NEVER use predictable fallback
+  const secret = process.env.LICENSE_BINDING_SECRET || process.env.NEXTAUTH_SECRET
+  if (!secret) {
+    throw new Error('LICENSE_BINDING_SECRET or NEXTAUTH_SECRET must be configured')
+  }
   const signature = crypto
     .createHmac('sha256', secret)
     .update(bindingHash)

@@ -48,19 +48,29 @@ next-env.d.ts
 # OS
 Thumbs.db
 
-# POS Software specific
-**/*.db
-**/*.db-shm
-**/*.db-wal
-compile_errors.txt
-lint-output.txt
-builder-binaries/
-builder-effective-config.yaml
+# Cache
+.electron-cache/
+.claude/
 
-# Excluded directories
+# Archives
+*.rar
+*.zip
+*.tar.gz
+
+# POS Software specific - don't push POS app from this repo
 "New folder/"
 New folder/
 
-# Documentation files
+# Temporary / fix scripts
+fix-*.js
+fix-*.ts
+extract.js
+extract.py
+rename-*.js
+safe-wrap-*.js
+wrap-*.js
+build-electron.bat
+
+# Documentation files (except README)
 *.md
 !README.md

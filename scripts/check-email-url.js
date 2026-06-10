@@ -32,7 +32,7 @@ if (BASE_URL.includes('youknowgurus-projects')) {
   console.log('\n❌ PROBLEM: Using preview deployment URL!')
   console.log('\nSOLUTION:')
   console.log('  1. Go to Vercel Dashboard → Settings → Environment Variables')
-  console.log('  2. Make sure NEXTAUTH_URL is set to: https://dhisum-tseyig.vercel.app')
+  console.log('  2. Make sure NEXTAUTH_URL is set to: https://site-jinda.vercel.app')
   console.log('  3. Redeploy the application')
   console.log('  4. Wait for deployment to complete before testing')
 } else if (process.env.NEXTAUTH_URL) {

@@ -1,4 +1,4 @@
-# Dhisum Tseyig Platform - Project Structure
+# Jinda Platform - Project Structure
 
 ## Overview
 
@@ -7,7 +7,7 @@ Complete Next.js application for POS software distribution and licensing.
 ## Directory Structure
 
 ```
-dhisum-tseyig-platform/
+site-jinda/
 ├── app/                          # Next.js App Router
 │   ├── (public pages)
 │   │   ├── page.tsx             # Landing page

@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import connectDB from '@/lib/db/mongodb'
 import PosUser from '@/lib/models/PosUser'
+import { apiRateLimit } from '@/lib/rate-limit/rate-limit'
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
+    // Apply rate limiting to prevent email enumeration abuse
+    const rateLimitResponse = await apiRateLimit(req)
+    if (rateLimitResponse) {
+      return rateLimitResponse
+    }
+
     const email = req.nextUrl.searchParams.get('email')
 
     if (!email) {

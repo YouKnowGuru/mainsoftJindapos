@@ -1,16 +1,25 @@
+import mongoose from 'mongoose'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import connectDB from '@/lib/db/mongodb'
 import { ContactMessage } from '@/lib/models/contact-message'
 import { authOptions } from '@/lib/auth/auth.config'
+import { apiRateLimit } from '@/lib/rate-limit/rate-limit'
 
 // GET /api/admin/messages - Fetch all contact messages
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    // Check authentication
+    // Check authentication and admin role
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
+    // Apply rate limiting
+    const rateLimitResponse = await apiRateLimit(req)
+    if (rateLimitResponse) {
+      return rateLimitResponse
     }
 
     await connectDB()
@@ -34,10 +43,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 // PATCH /api/admin/messages - Update message status (e.g. mark as read)
 export async function PATCH(req: NextRequest): Promise<NextResponse> {
   try {
-    // Check authentication
+    // Check authentication and admin role
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
+    // Apply rate limiting
+    const rateLimitResponse = await apiRateLimit(req)
+    if (rateLimitResponse) {
+      return rateLimitResponse
     }
 
     const body = await req.json()
@@ -46,6 +62,21 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
     if (!id || !status) {
       return NextResponse.json(
         { success: false, error: 'ID and Status are required' },
+        { status: 400 }
+      )
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid message ID format' },
+        { status: 400 }
+      )
+    }
+
+    const validStatuses = ['new', 'read', 'replied', 'archived']
+    if (!validStatuses.includes(status)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid status value' },
         { status: 400 }
       )
     }

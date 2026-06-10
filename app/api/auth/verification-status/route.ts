@@ -5,6 +5,7 @@ import Token from '@/lib/models/Token'
 import Session from '@/lib/models/Session'
 import { verifyAccessToken, createSession, getTokenExpiryTimes } from '@/lib/auth/tokens'
 import { validateDeviceFingerprint } from '@/lib/auth/device'
+import { apiRateLimit } from '@/lib/rate-limit/rate-limit'
 import { z } from 'zod'
 
 /**
@@ -14,6 +15,12 @@ import { z } from 'zod'
  */
 export async function GET(req: NextRequest) {
   try {
+    // Apply rate limiting to prevent enumeration abuse
+    const rateLimitResponse = await apiRateLimit(req)
+    if (rateLimitResponse) {
+      return rateLimitResponse
+    }
+
     const email = req.nextUrl.searchParams.get('email')
     const deviceId = req.nextUrl.searchParams.get('deviceId')
     const deviceFingerprint = req.nextUrl.searchParams.get('fingerprint')

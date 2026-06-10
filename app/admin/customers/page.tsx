@@ -126,10 +126,10 @@ export default function CustomersPage() {
             </p>
           </div>
         </div>
-        <Link href="/admin/customers/create">
+        <Link href="/admin/licenses/create">
           <Button className="bg-bhutan-maroon hover:bg-bhutan-maroon-dark text-white font-black rounded-xl px-6 h-12 shadow-lg shadow-bhutan-maroon/20 relative z-10">
             <Plus className="mr-2 h-4 w-4" />
-            Add Stakeholder
+            Create License
           </Button>
         </Link>
       </div>

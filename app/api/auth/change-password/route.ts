@@ -138,7 +138,7 @@ export async function POST(req: NextRequest) {
     // Clear rate limit on success
     changePasswordAttempts.delete(rateLimitKey)
 
-    console.log(`[Auth] Password changed for ${user.email}`)
+    // Password changed (audit logged)
 
     return NextResponse.json({
       success: true,

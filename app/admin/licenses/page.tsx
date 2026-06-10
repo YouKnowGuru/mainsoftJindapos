@@ -289,7 +289,7 @@ export default function LicensesPage() {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-20">
+                  <TableCell colSpan={7} className="text-center py-20">
                     <div className="flex flex-col items-center gap-3">
                       <Loader2 className="h-10 w-10 animate-spin text-bhutan-maroon/20" />
                       <p className="text-xs font-black text-slate-300 uppercase tracking-widest">Retrieving Data...</p>
@@ -298,7 +298,7 @@ export default function LicensesPage() {
                 </TableRow>
               ) : licenses.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-20">
+                  <TableCell colSpan={7} className="text-center py-20">
                     <div className="flex flex-col items-center gap-3">
                       <Key className="h-10 w-10 text-slate-100" />
                       <p className="text-sm font-bold text-slate-400">No active licenses found matching your filters.</p>

@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('License revocation error:', error)
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to revoke license' },
+      { success: false, error: 'Failed to revoke license' },
       { status: 500 }
     )
   }
@@ -129,6 +129,16 @@ export async function POST(req: NextRequest) {
  */
 export async function GET(req: NextRequest) {
   try {
+    // SECURITY: Require admin authentication for revocation status checks
+    const session = await getServerSession(authOptions)
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 403 }
+      )
+    }
+
     // Extract licenseKey from URL pathname: /api/license/revoke/XXXXX
     const pathname = req.nextUrl.pathname
     const licenseKey = pathname.split('/').pop()
@@ -166,7 +176,7 @@ export async function GET(req: NextRequest) {
   } catch (error: any) {
     console.error('License status check error:', error)
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to check license status' },
+      { success: false, error: 'Failed to check license status' },
       { status: 500 }
     )
   }

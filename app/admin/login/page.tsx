@@ -13,7 +13,10 @@ import { Loader2, Shield, Eye, EyeOff } from 'lucide-react'
 export default function AdminLoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
+  // SECURITY: Validate callbackUrl to prevent open redirect attacks
+  const rawCallbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
+  const allowedPaths = ['/admin/dashboard', '/admin/licenses', '/admin/customers', '/admin/messages', '/admin/security', '/admin/settings', '/admin/updates']
+  const callbackUrl = allowedPaths.includes(rawCallbackUrl) ? rawCallbackUrl : '/admin/dashboard'
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')

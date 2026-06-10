@@ -73,7 +73,7 @@ export default function AdminMessagesPage() {
                 })
                 const data = await res.json()
                 if (data.success) {
-                    setMessages(messages.map(m => m._id === msg._id ? { ...m, status: 'Read' } : m))
+                    setMessages(prev => prev.map(m => m._id === msg._id ? { ...m, status: 'Read' } : m))
                     setSelectedMessage({ ...msg, status: 'Read' })
                 }
             } catch (error) {
@@ -96,7 +96,7 @@ export default function AdminMessagesPage() {
 
             const data = await res.json()
             if (data.success) {
-                setMessages(messages.map(m => m._id === selectedMessage._id ? data.data : m))
+                setMessages(prev => prev.map(m => m._id === selectedMessage._id ? data.data : m))
                 setSelectedMessage(data.data)
                 setReplyText('')
             } else {

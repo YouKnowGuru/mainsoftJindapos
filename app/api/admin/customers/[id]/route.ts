@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import connectDB from '@/lib/db/mongodb'
@@ -13,10 +14,11 @@ export async function GET(
 ): Promise<NextResponse> {
   const { id } = await params;
   try {
-    // Check authentication
+    // Check authentication and admin role
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     // Apply rate limiting
@@ -26,6 +28,13 @@ export async function GET(
     }
 
     await connectDB()
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { error: 'Invalid customer ID format' },
+        { status: 400 }
+      )
+    }
 
     const customer = await Customer.findById(id)
 
@@ -61,10 +70,11 @@ export async function DELETE(
 ): Promise<NextResponse> {
   const { id } = await params;
   try {
-    // Check authentication
+    // Check authentication and admin role
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     // Apply rate limiting
@@ -121,10 +131,11 @@ export async function PATCH(
 ): Promise<NextResponse> {
   const { id } = await params;
   try {
-    // Check authentication
+    // Check authentication and admin role
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     // Apply rate limiting

@@ -41,7 +41,9 @@ function AdminLayoutContent({
     )
   }
 
-  if (!session && !isLoginPage) {
+  // Check admin role for all non-login pages
+  const user = session?.user as any
+  if (!isLoginPage && (!user?.role || user.role !== 'admin')) {
     redirect('/admin/login')
   }
 

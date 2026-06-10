@@ -20,10 +20,11 @@ function escapeRegex(input: string): string {
 // GET /api/admin/licenses - Get all licenses
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    // Check authentication
+    // Check authentication and admin role
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     // Apply rate limiting
@@ -96,10 +97,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 // POST /api/admin/licenses - Create new license
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    // Check authentication
+    // Check authentication and admin role
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     // Apply rate limiting
@@ -201,10 +203,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 // PATCH /api/admin/licenses - Update license
 export async function PATCH(req: NextRequest): Promise<NextResponse> {
   try {
-    // Check authentication
+    // Check authentication and admin role
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const user = session?.user as any
+    if (!user?.role || user.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     // Apply rate limiting
@@ -222,7 +225,7 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
     const updateData: any = {}
     if (validatedData.status) updateData.status = validatedData.status
     if (validatedData.expiryDate) updateData.expiryDate = new Date(validatedData.expiryDate)
-    if (body.maxUsers !== undefined) updateData.maxUsers = body.maxUsers
+    if (validatedData.maxUsers !== undefined) updateData.maxUsers = validatedData.maxUsers
 
     const license = await License.findByIdAndUpdate(
       validatedData.id,
