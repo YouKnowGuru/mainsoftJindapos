@@ -14,6 +14,7 @@ export function getApiBaseUrl(): string {
 
     // If running on the Vercel website or localhost, use relative paths
     if (
+      currentHost.includes('jindapos.com') ||
       currentHost.includes('vercel.app') ||
       currentHost === 'localhost' ||
       currentHost === '127.0.0.1'
@@ -23,7 +24,7 @@ export function getApiBaseUrl(): string {
   }
 
   // For desktop/POS app or any other context, use full Vercel URL
-  return 'https://site-jinda.vercel.app'
+  return 'https://jindapos.com'
 }
 
 /**

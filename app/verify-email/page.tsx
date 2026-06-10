@@ -24,11 +24,12 @@ function VerifyEmailContent() {
     try {
       // Use absolute URL to ensure it works from email links
       const apiUrl = typeof window !== 'undefined' &&
-        (window.location.hostname.includes('vercel.app') ||
+        (window.location.hostname.includes('jindapos.com') ||
+          window.location.hostname.includes('vercel.app') ||
           window.location.hostname === 'localhost' ||
           window.location.hostname === '127.0.0.1')
         ? '' // Use relative URL when on Vercel
-        : 'https://site-jinda.vercel.app' // Use full URL from email links
+        : 'https://jindapos.com' // Use full URL from email links
 
       // SECURITY: Send token in POST body instead of query string to prevent log leakage
       const res = await fetch(`${apiUrl}/api/auth/verify-email`, {
