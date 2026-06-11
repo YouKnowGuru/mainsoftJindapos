@@ -258,25 +258,53 @@ export async function POST(req: NextRequest) {
       )
 
       if (!deviceValid) {
-        // Device mismatch - require OTP verification
-        requiresOTP = true
-
-        // Log device mismatch event
-        await logDeviceMismatch({
-          userId: user._id.toString(),
-          email: user.email,
-          ipAddress: clientIp,
-          userAgent: req.headers.get('user-agent') || undefined,
-          deviceId: validated.deviceId,
-          deviceFingerprint,
-          details: {
-            reason: 'Device fingerprint mismatch',
-            storedFingerprint: user.deviceFingerprint,
-            currentFingerprint: deviceFingerprint,
-          },
+        // Check if this device is in the approvedDevices list
+        // A device is considered approved if it has the same deviceId or a matching fingerprint
+        const isApprovedDevice = user.approvedDevices?.some((approvedDevice: any) => {
+          // Match by deviceId if available
+          if (validated.deviceId && approvedDevice.deviceId === validated.deviceId) {
+            return true
+          }
+          // Match by fingerprint similarity
+          if (approvedDevice.fingerprint && deviceFingerprint) {
+            // Use same validation logic for consistency
+            return validateDeviceFingerprint(approvedDevice.fingerprint, deviceFingerprint)
+          }
+          return false
         })
 
-        // Device mismatch detected (audit logged)
+        if (isApprovedDevice) {
+          // Device is approved - update lastUsedAt and allow login
+          const approvedDevice = user.approvedDevices.find((d: any) =>
+            (validated.deviceId && d.deviceId === validated.deviceId) ||
+            (d.fingerprint && validateDeviceFingerprint(d.fingerprint, deviceFingerprint))
+          )
+          if (approvedDevice) {
+            approvedDevice.lastUsedAt = new Date()
+            await user.save()
+          }
+          requiresOTP = false
+        } else {
+          // Device mismatch - require OTP verification
+          requiresOTP = true
+
+          // Log device mismatch event
+          await logDeviceMismatch({
+            userId: user._id.toString(),
+            email: user.email,
+            ipAddress: clientIp,
+            userAgent: req.headers.get('user-agent') || undefined,
+            deviceId: validated.deviceId,
+            deviceFingerprint,
+            details: {
+              reason: 'Device fingerprint mismatch',
+              storedFingerprint: user.deviceFingerprint,
+              currentFingerprint: deviceFingerprint,
+            },
+          })
+
+          // Device mismatch detected (audit logged)
+        }
       }
     }
     // Else: First-time login or no stored fingerprint - allow without OTP

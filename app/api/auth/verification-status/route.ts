@@ -101,20 +101,35 @@ export async function GET(req: NextRequest) {
     // Create new session if needed
     if (!existingSession) {
       // Validate device fingerprint if provided
+      let deviceAllowed = true
       if (user.deviceFingerprint && deviceFingerprint) {
         const deviceValid = await validateDeviceFingerprint(
           user.deviceFingerprint,
           deviceFingerprint
         )
         if (!deviceValid) {
-          return NextResponse.json({
-            success: false,
-            verified: true,
-            needsStepUp: true,
-            stepUpType: 'device_verification',
-            message: 'Device verification required. Please log in with your credentials.',
+          // Check approvedDevices list before rejecting
+          const isApprovedDevice = user.approvedDevices?.some((approvedDevice: any) => {
+            if (deviceId && approvedDevice.deviceId === deviceId) {
+              return true
+            }
+            if (approvedDevice.fingerprint && deviceFingerprint) {
+              return validateDeviceFingerprint(approvedDevice.fingerprint, deviceFingerprint)
+            }
+            return false
           })
+          deviceAllowed = isApprovedDevice
         }
+      }
+
+      if (!deviceAllowed) {
+        return NextResponse.json({
+          success: false,
+          verified: true,
+          needsStepUp: true,
+          stepUpType: 'device_verification',
+          message: 'Device verification required. Please log in with your credentials.',
+        })
       }
 
       // Get client info

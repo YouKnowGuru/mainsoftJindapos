@@ -4,6 +4,7 @@ import connectDB from '@/lib/db/mongodb'
 import PosUser from '@/lib/models/PosUser'
 import Token from '@/lib/models/Token'
 import { hashToken } from '@/lib/auth/tokens'
+import { generateDeviceFingerprint } from '@/lib/auth/device'
 import { sendDeviceVerificationEmail } from '@/lib/email/email'
 import { z } from 'zod'
 import {
@@ -98,14 +99,20 @@ export async function POST(req: NextRequest) {
       type: 'device-verification',
     })
 
+    // Generate proper device fingerprint (same format as login route)
+    let deviceFingerprint: string | undefined
+    if (validated.deviceInfo) {
+      const { fingerprint } = generateDeviceFingerprint(validated.deviceInfo)
+      deviceFingerprint = fingerprint
+    }
+
     // Save new OTP
     await Token.create({
       userId: user._id,
       token: otpHash,
       type: 'device-verification',
       deviceId: validated.deviceId,
-      deviceFingerprint: validated.deviceInfo ?
-        `${validated.deviceInfo.platform}-${validated.deviceInfo.hostname}` : null,
+      deviceFingerprint: deviceFingerprint || null,
       deviceInfo: validated.deviceInfo,
       expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
     })
