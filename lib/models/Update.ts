@@ -8,6 +8,11 @@ export interface IUpdate extends Document {
   status: 'draft' | 'published' | 'blocked' | 'rollbacked'
   rolloutPercent: number
   forced: boolean
+  // Fields for electron-updater YAML
+  fileUrl: string
+  fileSize: number
+  fileSha512: string
+  releaseDate: Date
   createdAt: Date
   updatedAt: Date
 }
@@ -45,6 +50,23 @@ const UpdateSchema: Schema = new Schema(
     forced: {
       type: Boolean,
       default: false,
+    },
+    // Fields for electron-updater YAML
+    fileUrl: {
+      type: String,
+      default: '',
+    },
+    fileSize: {
+      type: Number,
+      default: 0,
+    },
+    fileSha512: {
+      type: String,
+      default: '',
+    },
+    releaseDate: {
+      type: Date,
+      default: Date.now,
     },
   },
   {

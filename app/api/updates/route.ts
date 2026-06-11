@@ -72,6 +72,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       notes: validatedData.notes,
       downloadUrl: validatedData.downloadUrl,
       isLatest: validatedData.isLatest,
+      fileUrl: validatedData.fileUrl || '',
+      fileSize: validatedData.fileSize || 0,
+      fileSha512: validatedData.fileSha512 || '',
+      releaseDate: validatedData.releaseDate ? new Date(validatedData.releaseDate) : new Date(),
     })
 
     return NextResponse.json({

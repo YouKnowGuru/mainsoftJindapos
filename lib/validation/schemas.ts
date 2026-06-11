@@ -74,6 +74,11 @@ export const createUpdateSchema = z.object({
   notes: z.string().min(1, 'Release notes are required'),
   downloadUrl: z.string().url('Invalid download URL'),
   isLatest: z.boolean().default(false),
+  // electron-updater YAML fields
+  fileUrl: z.string().optional(),
+  fileSize: z.number().optional(),
+  fileSha512: z.string().optional(),
+  releaseDate: z.string().optional(),
 })
 
 // Contact form schema
