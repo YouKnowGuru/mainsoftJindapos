@@ -26,7 +26,7 @@ export default function CreateUpdatePage() {
     const [formData, setFormData] = useState({
         version: '',
         notes: '',
-        downloadUrl: '',
+        downloadUrl: '', // Kept for API compatibility, not displayed
         isLatest: 'false',
         fileUrl: '',
         fileSize: '',
@@ -45,6 +45,7 @@ export default function CreateUpdatePage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...formData,
+                    downloadUrl: formData.fileUrl, // API requires this, use same as fileUrl
                     isLatest: formData.isLatest === 'true',
                     fileSize: formData.fileSize ? parseInt(formData.fileSize, 10) : undefined,
                 }),
@@ -115,29 +116,18 @@ export default function CreateUpdatePage() {
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="downloadUrl">Download URL *</Label>
-                            <Input
-                                id="downloadUrl"
-                                value={formData.downloadUrl}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, downloadUrl: e.target.value })}
-                                placeholder="https://s3.amazonaws.com/..."
-                                required
-                            />
-                        </div>
-
                         <div className="grid md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <Label htmlFor="fileUrl">Installer Filename *</Label>
+                                <Label htmlFor="fileUrl">Download URL (direct link) *</Label>
                                 <Input
                                     id="fileUrl"
                                     value={formData.fileUrl}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, fileUrl: e.target.value })}
-                                    placeholder="Jinda Setup 1.0.1.exe"
+                                    placeholder="https://github.com/YouKnowGuru/dhisum-pos-download/releases/download/v1.0/Jinda.Setup.1.0.0.exe"
                                     required
                                 />
                                 <p className="text-xs text-gray-500">
-                                    Full URL will be: https://github.com/YouKnowGuru/dhisum-pos-download/releases/download/v{version}/{filename}
+                                    Paste the full direct download URL from GitHub Releases (right-click asset → Copy link address)
                                 </p>
                             </div>
                             <div className="space-y-2">
