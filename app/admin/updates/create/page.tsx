@@ -16,7 +16,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { ArrowLeft, Loader2, Package } from 'lucide-react'
+import { ArrowLeft, Loader2, Package, Upload } from 'lucide-react'
 
 export default function CreateUpdatePage() {
     const router = useRouter()
@@ -33,11 +33,58 @@ export default function CreateUpdatePage() {
         fileSha512: '',
         releaseDate: '',
     })
+    const [uploadFile, setUploadFile] = useState<File | null>(null)
+    const [isUploading, setIsUploading] = useState(false)
+
+    const handleUpload = async () => {
+        if (!uploadFile || !formData.version) {
+            setError('Please select a file and enter version first')
+            return null
+        }
+        setIsUploading(true)
+        setError(null)
+        try {
+            const data = new FormData()
+            data.append('file', uploadFile)
+            data.append('version', formData.version)
+            const res = await fetch('/api/updates/upload', {
+                method: 'POST',
+                body: data,
+            })
+            const result = await res.json()
+            if (result.success) {
+                setFormData(prev => ({
+                    ...prev,
+                    fileUrl: result.fileUrl,
+                    fileSize: String(result.fileSize),
+                }))
+                return result.fileUrl
+            } else {
+                setError(result.error || 'Upload failed')
+                return null
+            }
+        } catch (err) {
+            setError('Upload failed')
+            return null
+        } finally {
+            setIsUploading(false)
+        }
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsSubmitting(true)
         setError(null)
+
+        let fileUrl = formData.fileUrl
+        // If file selected but not uploaded yet, upload first
+        if (uploadFile && !formData.fileUrl.startsWith('http')) {
+            fileUrl = await handleUpload() || ''
+            if (!fileUrl) {
+                setIsSubmitting(false)
+                return
+            }
+        }
 
         try {
             const response = await fetch('/api/updates', {
@@ -45,7 +92,8 @@ export default function CreateUpdatePage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...formData,
-                    downloadUrl: formData.fileUrl, // API requires this, use same as fileUrl
+                    fileUrl,
+                    downloadUrl: fileUrl,
                     isLatest: formData.isLatest === 'true',
                     fileSize: formData.fileSize ? parseInt(formData.fileSize, 10) : undefined,
                 }),
@@ -123,12 +171,47 @@ export default function CreateUpdatePage() {
                                     id="fileUrl"
                                     value={formData.fileUrl}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, fileUrl: e.target.value })}
-                                    placeholder="https://github.com/YouKnowGuru/dhisum-pos-download/releases/download/v1.0/Jinda.Setup.1.0.0.exe"
+                                    placeholder="https://jindapos.com/downloads/Jinda.Setup.1.0.1.exe"
                                     required
                                 />
                                 <p className="text-xs text-gray-500">
-                                    Paste the full direct download URL from GitHub Releases (right-click asset → Copy link address)
+                                    Or upload file below — URL will be auto-filled
                                 </p>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="fileUpload">Upload Installer (.exe)</Label>
+                                <Input
+                                    id="fileUpload"
+                                    type="file"
+                                    accept=".exe"
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        const file = e.target.files?.[0]
+                                        if (file) {
+                                            setUploadFile(file)
+                                            setFormData(prev => ({
+                                                ...prev,
+                                                fileSize: String(file.size),
+                                            }))
+                                        }
+                                    }}
+                                />
+                                {uploadFile && (
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleUpload}
+                                        disabled={isUploading}
+                                        className="mt-2"
+                                    >
+                                        {isUploading ? (
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <Upload className="mr-2 h-4 w-4" />
+                                        )}
+                                        {isUploading ? 'Uploading...' : 'Upload File'}
+                                    </Button>
+                                )}
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="fileSize">File Size (bytes)</Label>
