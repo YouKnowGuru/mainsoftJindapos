@@ -25,6 +25,7 @@ import {
     Undo2,
     Rocket,
     AlertTriangle,
+    Pencil,
 } from 'lucide-react'
 
 interface Update {
@@ -313,6 +314,18 @@ export default function UpdatesPage() {
                                                         <Undo2 className="h-4 w-4" />
                                                     </Button>
                                                 )}
+
+                                                {/* Edit button */}
+                                                <Link href={`/admin/updates/edit/${update._id}`}>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-9 w-9 rounded-xl text-slate-400 hover:text-blue-500 hover:bg-blue-50 transition-all"
+                                                        title="Edit"
+                                                    >
+                                                        <Pencil className="h-4 w-4" />
+                                                    </Button>
+                                                </Link>
 
                                                 {/* Delete button */}
                                                 <Button
