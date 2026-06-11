@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
+import { unlink } from 'fs/promises'
+import path from 'path'
 import connectDB from '@/lib/db/mongodb'
 import Update from '@/lib/models/Update'
 import { authOptions } from '@/lib/auth/auth.config'
@@ -175,6 +177,20 @@ export async function DELETE(
                 { error: 'Update not found' },
                 { status: 404 }
             )
+        }
+
+        // Delete associated installer file if hosted locally
+        if (update.fileUrl && update.fileUrl.includes('/downloads/')) {
+            try {
+                const fileName = update.fileUrl.split('/downloads/').pop()
+                if (fileName) {
+                    const filePath = path.join(process.cwd(), 'public', 'downloads', fileName)
+                    await unlink(filePath)
+                    console.log('[Delete Update] Deleted file:', filePath)
+                }
+            } catch (fileErr) {
+                console.warn('[Delete Update] Could not delete file:', fileErr)
+            }
         }
 
         return NextResponse.json({
