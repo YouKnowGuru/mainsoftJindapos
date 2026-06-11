@@ -128,13 +128,17 @@ export default function CreateUpdatePage() {
 
                         <div className="grid md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <Label htmlFor="fileUrl">Installer Filename</Label>
+                                <Label htmlFor="fileUrl">Installer Filename *</Label>
                                 <Input
                                     id="fileUrl"
                                     value={formData.fileUrl}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, fileUrl: e.target.value })}
                                     placeholder="Jinda Setup 1.0.1.exe"
+                                    required
                                 />
+                                <p className="text-xs text-gray-500">
+                                    Full URL will be: https://github.com/YouKnowGuru/dhisum-pos-download/releases/download/v{version}/{filename}
+                                </p>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="fileSize">File Size (bytes)</Label>

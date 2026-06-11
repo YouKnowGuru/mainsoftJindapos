@@ -32,7 +32,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     // Build YAML content for electron-updater
     // Format: https://github.com/electron-userland/electron-builder/blob/master/packages/electron-updater/src/providers/GenericProvider.ts
+    // IMPORTANT: url must be a FULL absolute URL, not a relative path
     const installerFileName = latestUpdate.fileUrl || `Jinda Setup ${latestUpdate.version}.exe`
+    
+    // Construct full GitHub download URL
+    // If fileUrl is already a full URL, use it; otherwise construct from GitHub repo
+    const downloadUrl = installerFileName.startsWith('http')
+      ? installerFileName
+      : `https://github.com/YouKnowGuru/dhisum-pos-download/releases/download/v${latestUpdate.version}/${encodeURIComponent(installerFileName)}`
+    
     const sha512 = latestUpdate.fileSha512 || ''
     const size = latestUpdate.fileSize || 0
     const releaseDate = latestUpdate.releaseDate
@@ -41,10 +49,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     const yamlContent = `version: ${latestUpdate.version}
 files:
-  - url: ${installerFileName}
+  - url: ${downloadUrl}
     sha512: ${sha512}
     size: ${size}
-path: ${installerFileName}
+path: ${downloadUrl}
 sha512: ${sha512}
 releaseDate: '${releaseDate}'
 `
