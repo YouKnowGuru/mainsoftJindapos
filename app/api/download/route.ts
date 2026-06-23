@@ -19,12 +19,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     switch (type) {
       case 'portable':
-        downloadUrl = 'https://github.com/YouKnowGuru/IHM/releases/download/V/Jinda.1.0.0.exe'
+        downloadUrl = 'https://github.com/YouKnowGuru/dhisum-pos-download/releases/download/v1.0/Jinda.1.0.0.exe'
         filename = 'Jinda.1.0.0.exe'
         break
       case 'setup':
       default:
-        downloadUrl = 'https://github.com/YouKnowGuru/IHM/releases/download/V/Jinda.Setup.1.0.0.exe'
+        downloadUrl = 'https://github.com/YouKnowGuru/dhisum-pos-download/releases/download/v1.0/Jinda.Setup.1.0.0.exe'
         filename = 'Jinda.Setup.1.0.0.exe'
         break
     }
