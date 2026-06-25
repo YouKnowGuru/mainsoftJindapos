@@ -40,38 +40,7 @@ const plans = [
     ],
     cta: 'Get Started',
     href: '/contact',
-  },
-  {
-    name: 'Growth (2-Year)',
-    period: 'first purchase',
-    description: 'For growing businesses with staff.',
-    features: [
-      '2 User Accounts',
-      'All Premium Features',
-      'Purchase Orders & Quotations',
-      'Expense Tracking',
-      'Phone Support',
-      'Free Remote Setup',
-    ],
-    cta: 'Select Growth',
-    href: '/contact',
     popular: true,
-  },
-  {
-    name: 'Enterprise (3-Year)',
-    period: 'first purchase',
-    description: 'Maximum value for scaling businesses.',
-    features: [
-      '5 User Accounts',
-      'All Premium Features',
-      'Payroll & Branch Management',
-      'Tiered Pricing',
-      '24/7 Priority Support',
-      'Personal Account Manager',
-    ],
-    cta: 'Go Enterprise',
-    href: '/contact',
-    bestValue: true,
   },
 ]
 
@@ -124,7 +93,7 @@ export default function PricingPage() {
 
       <section className="py-10 md:py-14">
         <div className="container px-4 md:px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto">
             {plans.map((plan) => (
               <Card key={plan.name} className={cn(
                 "rounded-2xl md:rounded-[2rem] transition-all duration-300",

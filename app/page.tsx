@@ -105,34 +105,7 @@ const pricingPlans = [
     ],
     cta: 'Get Started',
     href: '/contact',
-  },
-  {
-    name: 'Growth (2-Yr)',
-    period: '1st purchase',
-    description: 'Billed biennially',
-    features: [
-      '2 User Accounts',
-      'Purchase Orders',
-      'Expense Tracking',
-      'Free Remote Setup',
-    ],
-    cta: 'Select Growth',
-    href: '/contact',
     popular: true,
-  },
-  {
-    name: 'Enterprise (3-Yr)',
-    period: '1st purchase',
-    description: 'Billed triennially',
-    features: [
-      '5 User Accounts',
-      'Payroll & Branches',
-      'Tiered Pricing',
-      '24/7 Support',
-    ],
-    cta: 'Go Enterprise',
-    href: '/contact',
-    bestValue: true,
   },
 ]
 
@@ -499,7 +472,7 @@ export default function HomePage() {
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">Precision Scaling Plans</h2>
             <p className="text-xs md:text-sm text-slate-500 font-bold">Zero hidden costs. Full compliance guaranteed.</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto">
             {pricingPlans.map((plan) => (
               <Card
                 key={plan.name}
