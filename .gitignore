@@ -57,6 +57,9 @@ Thumbs.db
 *.zip
 *.tar.gz
 
+# POS Software specific - don't push POS app from this repo
+New folder/
+
 # Temporary / fix scripts
 fix-*.js
 fix-*.ts
