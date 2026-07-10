@@ -136,11 +136,7 @@ export default function AdminLoginPage() {
           </CardContent>
         </Card>
 
-        <div className="text-center mt-12 pb-8">
-          <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">
-            Powered by Our Store Tsirang • v1.2.4-PRO
-          </p>
-        </div>
+
       </div>
     </div>
   )
